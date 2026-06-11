@@ -6,6 +6,7 @@ import { FiShare2, FiChevronRight, FiPlus } from "react-icons/fi"
 import { getFeaturedReviews } from "@/lib/api"
 import type { Review } from "@/lib/types"
 import { FALLBACK_IMAGE } from "@/lib/constants"
+import { Reveal } from "@/components/ui/Reveal"
 
 export default function CompareVehiclesPage() {
   const [vehicles, setVehicles] = useState<Review[]>([])
@@ -46,123 +47,131 @@ export default function CompareVehiclesPage() {
       <Header />
       <main className="max-w-[1280px] mx-auto px-6 md:px-12 py-8">
         {/* Breadcrumbs & Title */}
-        <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <nav className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-2">
-              <Link className="hover:text-primary transition-colors" to="/">Home</Link>
-              <FiChevronRight className="text-[10px]" />
-              <span>Compare</span>
-            </nav>
-            <h1 className="text-5xl md:text-7xl font-archivo font-extrabold leading-none tracking-tight">
-              VEHICLE <span className="text-primary">COMPARISON</span>
-            </h1>
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3 bg-muted/30 px-4 py-2">
-              <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Highlight Differences</span>
-              <div className="relative inline-block w-10 h-6 bg-slate-300 rounded-full cursor-pointer">
-                <div className="absolute left-0 top-0 w-6 h-6 bg-white rounded-full border-2 border-slate-300 transition-transform duration-200" />
-              </div>
+        <Reveal animation="fade-down" duration={500}>
+          <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <nav className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-2">
+                <Link className="hover:text-primary transition-colors" to="/">Home</Link>
+                <FiChevronRight className="text-[10px]" />
+                <span>Compare</span>
+              </nav>
+              <h1 className="text-5xl md:text-7xl font-archivo font-extrabold leading-none tracking-tight">
+                VEHICLE <span className="text-primary">COMPARISON</span>
+              </h1>
             </div>
-            <button className="bg-secondary text-white px-6 py-2 text-xs font-mono hover:opacity-90 transition-all flex items-center gap-2">
-              <FiShare2 className="text-sm" /> SHARE
-            </button>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3 bg-muted/30 px-4 py-2">
+                <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">Highlight Differences</span>
+                <div className="relative inline-block w-10 h-6 bg-slate-300 rounded-full cursor-pointer">
+                  <div className="absolute left-0 top-0 w-6 h-6 bg-white rounded-full border-2 border-slate-300 transition-transform duration-200" />
+                </div>
+              </div>
+              <button className="bg-secondary text-white px-6 py-2 text-xs font-mono hover:opacity-90 transition-all flex items-center gap-2">
+                <FiShare2 className="text-sm" /> SHARE
+              </button>
+            </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* Sticky Vehicle Header */}
-        <div className="grid grid-cols-5 gap-6 sticky top-20 z-40 bg-background pt-4 pb-4 border-b border-border">
-          <div className="col-span-1 flex items-end pb-2">
-            <span className="text-xs font-mono text-muted-foreground uppercase tracking-tight">Specifications</span>
+        <Reveal animation="fade-up" delay={100}>
+          <div className="grid grid-cols-5 gap-6 sticky top-20 z-40 bg-background pt-4 pb-4 border-b border-border">
+            <div className="col-span-1 flex items-end pb-2">
+              <span className="text-xs font-mono text-muted-foreground uppercase tracking-tight">Specifications</span>
+            </div>
+
+            {v1 && (
+              <div className="relative group">
+                <Link to={`/cars/${v1.slug}`}>
+                  <div className="aspect-[16/10] bg-muted/30 overflow-hidden mb-3 border border-border">
+                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      src={v1.featured_image || FALLBACK_IMAGE}
+                      alt={v1.title} />
+                  </div>
+                </Link>
+                <div className="text-2xl font-archivo font-bold uppercase truncate">{v1.manufacturer}</div>
+                <div className="text-xs font-mono text-primary">{v1.year} MODEL</div>
+              </div>
+            )}
+
+            {v2 && (
+              <div className="relative group">
+                <Link to={`/cars/${v2.slug}`}>
+                  <div className="aspect-[16/10] bg-muted/30 overflow-hidden mb-3 border border-border">
+                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      src={v2.featured_image || FALLBACK_IMAGE}
+                      alt={v2.title} />
+                  </div>
+                </Link>
+                <div className="text-2xl font-archivo font-bold uppercase truncate">{v2.manufacturer}</div>
+                <div className="text-xs font-mono text-primary">{v2.year} MODEL</div>
+              </div>
+            )}
+
+            {[0, 1].map((i) => (
+              <div key={i} className="border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center p-6 hover:bg-muted/30 transition-colors cursor-pointer group">
+                <FiPlus className="text-4xl text-muted-foreground group-hover:text-primary transition-colors mb-2" />
+                <span className="text-xs font-mono text-muted-foreground">ADD VEHICLE</span>
+              </div>
+            ))}
           </div>
-
-          {v1 && (
-            <div className="relative group">
-              <Link to={`/cars/${v1.slug}`}>
-                <div className="aspect-[16/10] bg-muted/30 overflow-hidden mb-3 border border-border">
-                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    src={v1.featured_image || FALLBACK_IMAGE}
-                    alt={v1.title} />
-                </div>
-              </Link>
-              <div className="text-2xl font-archivo font-bold uppercase truncate">{v1.manufacturer}</div>
-              <div className="text-xs font-mono text-primary">{v1.year} MODEL</div>
-            </div>
-          )}
-
-          {v2 && (
-            <div className="relative group">
-              <Link to={`/cars/${v2.slug}`}>
-                <div className="aspect-[16/10] bg-muted/30 overflow-hidden mb-3 border border-border">
-                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    src={v2.featured_image || FALLBACK_IMAGE}
-                    alt={v2.title} />
-                </div>
-              </Link>
-              <div className="text-2xl font-archivo font-bold uppercase truncate">{v2.manufacturer}</div>
-              <div className="text-xs font-mono text-primary">{v2.year} MODEL</div>
-            </div>
-          )}
-
-          {[0, 1].map((i) => (
-            <div key={i} className="border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center p-6 hover:bg-muted/30 transition-colors cursor-pointer group">
-              <FiPlus className="text-4xl text-muted-foreground group-hover:text-primary transition-colors mb-2" />
-              <span className="text-xs font-mono text-muted-foreground">ADD VEHICLE</span>
-            </div>
-          ))}
-        </div>
+        </Reveal>
 
         {/* Performance Benchmarks */}
         {v1 && v2 && (
           <>
-            <section className="py-8 border-b border-border">
-              <div className="flex items-center gap-4 mb-8">
-                <h3 className="text-2xl font-archivo font-bold uppercase">Performance Benchmarks</h3>
-                <div className="h-px flex-1 bg-border" />
-              </div>
-              <div className="grid grid-cols-5 gap-6">
-                <div className="col-span-1 py-4">
-                  <div className="mb-8">
-                    <span className="text-xs font-mono text-muted-foreground uppercase">0-60 MPH (SEC)</span>
-                    <p className="text-[10px] font-mono text-muted-foreground/60">Lower is better</p>
+            <Reveal animation="fade-up" delay={200}>
+              <section className="py-8 border-b border-border">
+                <div className="flex items-center gap-4 mb-8">
+                  <h3 className="text-2xl font-archivo font-bold uppercase">Performance Benchmarks</h3>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <div className="grid grid-cols-5 gap-6">
+                  <div className="col-span-1 py-4">
+                    <div className="mb-8">
+                      <span className="text-xs font-mono text-muted-foreground uppercase">0-60 MPH (SEC)</span>
+                      <p className="text-[10px] font-mono text-muted-foreground/60">Lower is better</p>
+                    </div>
+                    <div>
+                      <span className="text-xs font-mono text-muted-foreground uppercase">TOP SPEED (MPH)</span>
+                      <p className="text-[10px] font-mono text-muted-foreground/60">Higher is better</p>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs font-mono text-muted-foreground uppercase">TOP SPEED (MPH)</span>
-                    <p className="text-[10px] font-mono text-muted-foreground/60">Higher is better</p>
+                  <PerformanceColumn
+                    acceleration={v1.specs?.acceleration}
+                    topSpeed={v1.specs?.top_speed}
+                  />
+                  <PerformanceColumn
+                    acceleration={v2.specs?.acceleration}
+                    topSpeed={v2.specs?.top_speed}
+                  />
+                  <div className="col-span-2 flex items-center justify-center opacity-20">
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest italic">Data Pending Selection</span>
                   </div>
                 </div>
-                <PerformanceColumn
-                  acceleration={v1.specs?.acceleration}
-                  topSpeed={v1.specs?.top_speed}
-                />
-                <PerformanceColumn
-                  acceleration={v2.specs?.acceleration}
-                  topSpeed={v2.specs?.top_speed}
-                />
-                <div className="col-span-2 flex items-center justify-center opacity-20">
-                  <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest italic">Data Pending Selection</span>
-                </div>
-              </div>
-            </section>
+              </section>
+            </Reveal>
 
             {/* Comparison Table */}
             <div className="mt-8 transition-all duration-300">
-              {Object.entries(comparisonData!).map(([sectionKey, rows]) => (
-                <div key={sectionKey} className="mb-8">
-                  <div className="bg-foreground text-white py-2 px-4 mb-2">
-                    <span className="text-xs font-mono text-white uppercase tracking-[0.2em]">
-                      {sectionKey.replace(/([A-Z])/g, ' $1').trim().toUpperCase()}
-                    </span>
-                  </div>
-                  {rows.map((row) => (
-                    <div key={row.label} className="grid grid-cols-5 gap-6 border-b border-border py-4 hover:bg-muted/10 transition-colors">
-                      <div className="text-xs font-mono text-muted-foreground">{row.label}</div>
-                      <div className="text-sm font-bold">{row.v1}</div>
-                      <div className="text-sm font-bold text-primary">{row.v2}</div>
-                      <div className="col-span-2 text-muted-foreground/40 text-sm">—</div>
+              {Object.entries(comparisonData!).map(([sectionKey, rows], sIdx) => (
+                <Reveal key={sectionKey} animation="fade-up" delay={300 + sIdx * 50}>
+                  <div className="mb-8">
+                    <div className="bg-foreground text-white py-2 px-4 mb-2">
+                      <span className="text-xs font-mono text-white uppercase tracking-[0.2em]">
+                        {sectionKey.replace(/([A-Z])/g, ' $1').trim().toUpperCase()}
+                      </span>
                     </div>
-                  ))}
-                </div>
+                    {rows.map((row) => (
+                      <div key={row.label} className="grid grid-cols-5 gap-6 border-b border-border py-4 hover:bg-muted/10 transition-colors">
+                        <div className="text-xs font-mono text-muted-foreground">{row.label}</div>
+                        <div className="text-sm font-bold">{row.v1}</div>
+                        <div className="text-sm font-bold text-primary">{row.v2}</div>
+                        <div className="col-span-2 text-muted-foreground/40 text-sm">—</div>
+                      </div>
+                    ))}
+                  </div>
+                </Reveal>
               ))}
             </div>
           </>

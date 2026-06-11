@@ -1,6 +1,8 @@
-import type { Review, ApiResponse, ReviewFilters, Comment } from "./types"
+import type { Review, ApiResponse, ReviewFilters, Comment, NewsApiResponse, ReviewInput } from "./types"
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/"
+const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY
+const NEWS_API_URL = "https://api.apitube.io/v1/news/everything"
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
@@ -51,4 +53,31 @@ export async function createComment(
     method: "POST",
     body: JSON.stringify(data),
   })
+}
+
+export async function createReview(data: ReviewInput): Promise<ApiResponse<Review>> {
+  return fetchApi<ApiResponse<Review>>("/reviews", {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+}
+
+export async function deleteReview(id: string): Promise<ApiResponse<void>> {
+  return fetchApi<ApiResponse<void>>(`/reviews/${id}`, {
+    method: "DELETE",
+  })
+}
+
+export async function getNews(page = 1, perPage = 10): Promise<NewsApiResponse> {
+  const url = new URL(NEWS_API_URL)
+  url.searchParams.set("api_key", NEWS_API_KEY)
+  url.searchParams.set("q", "cars OR automotive OR electric vehicles")
+  url.searchParams.set("page", String(page))
+  url.searchParams.set("per_page", String(perPage))
+
+  const res = await fetch(url.toString())
+  if (!res.ok) {
+    throw new Error(`News API error: ${res.status}`)
+  }
+  return res.json()
 }
