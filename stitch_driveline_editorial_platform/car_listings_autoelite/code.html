@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AUTOELITE | Premium Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-filter-accent {
+            border-left: 2px solid #b90027;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f7f9fb",
+                      "on-primary-fixed": "#410007",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-container": "#fcfbff",
+                      "on-error-container": "#93000a",
+                      "error-container": "#ffdad6",
+                      "surface": "#f7f9fb",
+                      "inverse-surface": "#2d3133",
+                      "tertiary-fixed-dim": "#b7c8e1",
+                      "on-surface-variant": "#5d3f3e",
+                      "inverse-on-surface": "#eff1f3",
+                      "primary": "#b90027",
+                      "secondary": "#565e74",
+                      "primary-fixed": "#ffdad8",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#bf0029",
+                      "on-background": "#191c1e",
+                      "on-primary": "#ffffff",
+                      "surface-variant": "#e0e3e5",
+                      "on-surface": "#191c1e",
+                      "surface-dim": "#d8dadc",
+                      "surface-container": "#eceef0",
+                      "outline": "#916e6d",
+                      "secondary-container": "#dae2fd",
+                      "inverse-primary": "#ffb3b1",
+                      "on-tertiary-fixed-variant": "#38485d",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed-dim": "#ffb3b1",
+                      "on-primary-fixed-variant": "#92001d",
+                      "surface-container-highest": "#e0e3e5",
+                      "tertiary-fixed": "#d3e4fe",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#f7f9fb",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "tertiary": "#4d5c72",
+                      "surface-container-low": "#f2f4f6",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed": "#0b1c30",
+                      "on-secondary-container": "#5c647a",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "outline-variant": "#e6bdbb",
+                      "surface-container-high": "#e6e8ea",
+                      "on-secondary-fixed": "#131b2e",
+                      "on-primary-container": "#fffaf9",
+                      "tertiary-container": "#65758c",
+                      "secondary-fixed": "#dae2fd",
+                      "primary-container": "#e31837"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-desktop": "48px",
+                      "stack-md": "16px",
+                      "stack-lg": "32px",
+                      "margin-mobile": "16px",
+                      "container-max": "1280px",
+                      "stack-xl": "64px",
+                      "stack-sm": "8px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Archivo Narrow"],
+                      "label-md": ["JetBrains Mono"],
+                      "headline-xl": ["Archivo Narrow"],
+                      "label-sm": ["JetBrains Mono"],
+                      "display-lg": ["Archivo Narrow"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-white">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="text-headline-lg font-headline-lg font-bold tracking-tighter text-on-surface">AUTOELITE</div>
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-primary border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Cars</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Reviews</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">News</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#">Compare</a>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="p-2 hover:bg-surface-container rounded-full transition-all">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="max-w-container-max mx-auto px-margin-desktop py-stack-lg min-h-screen">
+<!-- Header Section -->
+<header class="mb-stack-xl flex flex-col md:flex-row justify-between items-end gap-stack-md">
+<div>
+<h1 class="font-headline-xl text-headline-xl uppercase tracking-tight">Current Inventory</h1>
+<p class="font-label-md text-label-md text-on-surface-variant mt-2">SHOWING 12 OF 148 HIGH-PERFORMANCE VEHICLES</p>
+</div>
+<div class="flex items-center gap-stack-md w-full md:w-auto">
+<div class="flex border border-outline rounded p-1 bg-surface-container-low">
+<button class="p-2 bg-surface-bright shadow-sm rounded-sm" id="view-grid">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright rounded-sm transition-all" id="view-list">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+</button>
+</div>
+<select class="bg-surface border border-outline font-label-md text-label-md px-4 py-2 min-w-[200px] focus:ring-2 focus:ring-primary outline-none">
+<option>Sort by: Newest</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Performance: 0-60 MPH</option>
+</select>
+</div>
+</header>
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Filter Sidebar -->
+<aside class="w-full lg:w-72 flex-shrink-0 space-y-stack-lg">
+<div class="sticky top-24">
+<div class="flex justify-between items-center mb-stack-md border-b-2 border-on-surface pb-2">
+<h2 class="font-label-md text-label-md uppercase font-bold">Refine Results</h2>
+<button class="text-label-sm font-label-sm text-primary hover:underline">Clear All</button>
+</div>
+<div class="space-y-stack-lg max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar pr-2">
+<!-- Brand -->
+<section>
+<h3 class="font-label-md text-label-md mb-stack-sm text-on-surface-variant uppercase">Manufacturer</h3>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Porsche</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Ferrari</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">McLaren</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Lamborghini</span>
+</label>
+</div>
+</section>
+<!-- Price -->
+<section>
+<h3 class="font-label-md text-label-md mb-stack-sm text-on-surface-variant uppercase">Price Range</h3>
+<div class="space-y-4">
+<input class="w-full accent-primary" max="500000" min="50000" step="10000" type="range"/>
+<div class="flex justify-between font-label-sm text-label-sm">
+<span>$50k</span>
+<span class="text-primary font-bold">$250k+</span>
+</div>
+</div>
+</section>
+<!-- Body Style -->
+<section>
+<h3 class="font-label-md text-label-md mb-stack-sm text-on-surface-variant uppercase">Body Style</h3>
+<div class="grid grid-cols-2 gap-2">
+<button class="border border-outline py-2 text-label-sm font-label-sm hover:bg-surface-container active-filter-accent">Coupe</button>
+<button class="border border-outline py-2 text-label-sm font-label-sm hover:bg-surface-container">Sedan</button>
+<button class="border border-outline py-2 text-label-sm font-label-sm hover:bg-surface-container">SUV</button>
+<button class="border border-outline py-2 text-label-sm font-label-sm hover:bg-surface-container">Convertible</button>
+</div>
+</section>
+<!-- Drivetrain -->
+<section>
+<h3 class="font-label-md text-label-md mb-stack-sm text-on-surface-variant uppercase">Drivetrain</h3>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-4 h-4 border-outline text-primary focus:ring-primary" name="drivetrain" type="radio"/>
+<span class="font-body-md">Rear-Wheel Drive</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-4 h-4 border-outline text-primary focus:ring-primary" name="drivetrain" type="radio"/>
+<span class="font-body-md">All-Wheel Drive</span>
+</label>
+</div>
+</section>
+<!-- Features -->
+<section>
+<h3 class="font-label-md text-label-md mb-stack-sm text-on-surface-variant uppercase">Key Features</h3>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-4 h-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md">Carbon Ceramic Brakes</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-4 h-4 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md">Adaptive Suspension</span>
+</label>
+</div>
+</section>
+</div>
+</div>
+</aside>
+<!-- Results Section -->
+<div class="flex-grow">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter" id="results-grid">
+<!-- Card 1 -->
+<article class="bg-surface-bright border border-outline-variant overflow-hidden group hover:border-on-surface transition-all">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A sleek black Porsche 911 GT3 parked on a modern architectural driveway at sunset. The lighting is warm and golden, accentuating the car's aerodynamic curves and rear wing. The style is high-end editorial automotive photography with deep contrast and sharp details. The mood is sophisticated and powerful, reflecting a premium light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCToWdTv72Z0I7HIPrw11Tp3Hii9prR4markujIbsod3I7Vb76hwJhRN4OhnpImUNly97tfy_QYBDs6He1xjxTvW2-ZEdBAnD9kJbKfY5VQC8AH4us_mWAjQa23IoQUG1rQ9SeBc0JwEIW6ZefKgOALLvCHfvVtcOhsozHa14p6n6ElB7I4k2gPvwLMk06o7EjYCJB2KSEby6f9R6cNCBhMSt2IY7pJoy_wTIw1sCbi2QLBkRwrsS-RPIZk4w8pijXJOiBuf3vXhzI"/>
+<div class="absolute top-4 left-4 bg-on-background text-white px-3 py-1 font-label-sm text-label-sm uppercase">Hypercar</div>
+<button class="absolute top-4 right-4 w-10 h-10 bg-surface/40 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-stack-md flex flex-col h-full">
+<div class="mb-4">
+<h4 class="font-label-sm text-label-sm text-primary uppercase mb-1">PORSCHE</h4>
+<h3 class="font-headline-lg text-[24px] leading-tight">2024 911 GT3 RS</h3>
+</div>
+<div class="grid grid-cols-2 gap-4 border-y border-outline-variant py-4 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">speed</span>
+<span class="font-label-md text-label-md">518 HP</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">timer</span>
+<span class="font-label-md text-label-md">3.0s 0-60</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-headline-lg text-[28px]">$241,300</span>
+<button class="bg-secondary text-white px-6 py-2 font-label-md text-label-md hover:bg-on-background transition-colors">VIEW SPECS</button>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-bright border border-outline-variant overflow-hidden group hover:border-on-surface transition-all">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A vibrant red Ferrari SF90 Stradale captured in a studio setting with dramatic, high-contrast lighting that creates deep shadows and brilliant highlights on the metallic bodywork. The background is a clean, neutral grey to make the red pop. The image style is polished commercial car photography with a focus on speed and luxury. The atmosphere is intense and high-performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlKtT9spjiHYshwDEAiuX-jUjGH90_tqHjvH0gRhPoY6BC-rFsSMylNzTE0AyvylHsCNMgPDDNVJGjkutjMV1T8apFIUebUzR-lO3IzVe5FY8-VUn4sgikYnoRYIMRA0bRf1GPWkIxW33J0FuqC5sLl4iKYya7h5zS6Fy7JIrlInhUAInx6Jgy-hJG_5LAXtZFY0S193paCnAVFzfvvvsIk6CuBfguk68Y39BqCT3W91I2VZvm5wsJRO4wAkeJG43b7mm69A6xo3c"/>
+<div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 font-label-sm text-label-sm uppercase">Featured</div>
+<button class="absolute top-4 right-4 w-10 h-10 bg-surface/40 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="p-stack-md flex flex-col h-full">
+<div class="mb-4">
+<h4 class="font-label-sm text-label-sm text-primary uppercase mb-1">FERRARI</h4>
+<h3 class="font-headline-lg text-[24px] leading-tight">SF90 STRADALE</h3>
+</div>
+<div class="grid grid-cols-2 gap-4 border-y border-outline-variant py-4 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">bolt</span>
+<span class="font-label-md text-label-md">986 HP</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">eco</span>
+<span class="font-label-md text-label-md">HYBRID</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-headline-lg text-[28px]">$524,815</span>
+<button class="bg-secondary text-white px-6 py-2 font-label-md text-label-md hover:bg-on-background transition-colors">VIEW SPECS</button>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-bright border border-outline-variant overflow-hidden group hover:border-on-surface transition-all">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A metallic silver McLaren 720S driving through a winding mountain pass during the blue hour. The motion blur in the background conveys a sense of extreme speed while the car remains sharp and detailed. The cool tones of the dusk lighting create a tech-forward, sophisticated feel. The style is cinematic and editorial, highlighting the vehicle's futuristic design and engineering prowess." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs580YN3QrhKRHKZ3OI3x0oejcVQj0tsR8tvxMBcrL7wNL68Z8a8aRWKO50E4IUdIa3ZCANESi3kHFuMCJ7PHsOYyn6imLOxvxJjRcbDuzg07cUYDjoE_N32mXO5vgLSIgRTOidn7un8tafyFsi1UwKxbw0UDjI9nE63qxSki4a3YcJp1faqwxbvmjpdp6GMO-Erq8Z4MXTIREOAV8do7HxSPSHkdfs6xrU3P3mNQe1ra6BZmsd1ZtbMp6Wr1vLGHa0u-5RrnnxqQ"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-surface/40 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-stack-md flex flex-col h-full">
+<div class="mb-4">
+<h4 class="font-label-sm text-label-sm text-primary uppercase mb-1">MCLAREN</h4>
+<h3 class="font-headline-lg text-[24px] leading-tight">720S PERFORMANCE</h3>
+</div>
+<div class="grid grid-cols-2 gap-4 border-y border-outline-variant py-4 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">speed</span>
+<span class="font-label-md text-label-md">710 HP</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">settings_input_component</span>
+<span class="font-label-md text-label-md">7-SPEED DCT</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-headline-lg text-[28px]">$310,500</span>
+<button class="bg-secondary text-white px-6 py-2 font-label-md text-label-md hover:bg-on-background transition-colors">VIEW SPECS</button>
+</div>
+</div>
+</article>
+<!-- Row 2 Card 1 -->
+<article class="bg-surface-bright border border-outline-variant overflow-hidden group hover:border-on-surface transition-all">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A white Lamborghini Huracan EVO sitting under bright, direct sunlight in a minimalist desert environment. The heat haze in the distance adds a cinematic quality, while the sharp shadows underscore the aggressive geometric lines of the car. The aesthetic is clean, modern, and high-key. The focus is on the raw power and striking visual presence of the Italian supercar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN4mpHDmMRhywXn1nFlAJmQtI8mgfGCz2UAxUv5ACobbdtyuqP-Nty6bT5XKlzg0_mvwGdfhAlVrQVzwNC3D4D2OEm0HeqFrmd3VaKzFZcktaC8BQcVmzF3WzUm2h6xJc3BUJu7NDwJl0zGWxnvEiVZ3gQ-jmeixZmOORJq90wKHmDK_w8hUV_MVy9bk8Jjm56kl5euOJcgFgxB8Sbr_gvGenrr2Lb2xVxBOVogaT5Agqmhr-2CeBUFkx9QOPe35Ulei91wnS9f3c"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-surface/40 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-stack-md flex flex-col h-full">
+<div class="mb-4">
+<h4 class="font-label-sm text-label-sm text-primary uppercase mb-1">LAMBORGHINI</h4>
+<h3 class="font-headline-lg text-[24px] leading-tight">HURACÁN EVO</h3>
+</div>
+<div class="grid grid-cols-2 gap-4 border-y border-outline-variant py-4 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">speed</span>
+<span class="font-label-md text-label-md">631 HP</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">mode_fan</span>
+<span class="font-label-md text-label-md">V10 N/A</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-headline-lg text-[28px]">$261,274</span>
+<button class="bg-secondary text-white px-6 py-2 font-label-md text-label-md hover:bg-on-background transition-colors">VIEW SPECS</button>
+</div>
+</div>
+</article>
+<!-- Row 2 Card 2 -->
+<article class="bg-surface-bright border border-outline-variant overflow-hidden group hover:border-on-surface transition-all">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A deep navy blue Aston Martin DBS Superleggera parked in front of a historic European estate at dawn. The soft, diffused morning light highlights the elegant yet muscular bodywork. The composition is classic and refined, suggesting a legacy of luxury and performance. The style is premium editorial with a focus on heritage and craftsmanship in a modern context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFOqyFZXpcG_FkO4XSac1YBQisASp31DHI5g9qM08rUTRwY3cEo9bzGRWLzfZRzVdfo3DhYnkyOMO1f9wdZja88Ky4doZYhaYRjg5Li1-0fh-ALGxdESoP4F5-sxxmTsZ3Hb7jy3aznhfDoRbIc9AMkd1VFOIPg9cP8M8VmP26af2-lPpjFWTt3UrbUAmuNwhf7ZKTGW3pl2Jh8L4Eepd6fUCLyKIOx1pYf0e9yUveBlUWyYf3SWI3y_pC1eNXMmfEYDn1gKt-HcQ"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-surface/40 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-stack-md flex flex-col h-full">
+<div class="mb-4">
+<h4 class="font-label-sm text-label-sm text-primary uppercase mb-1">ASTON MARTIN</h4>
+<h3 class="font-headline-lg text-[24px] leading-tight">DBS SUPERLEGGERA</h3>
+</div>
+<div class="grid grid-cols-2 gap-4 border-y border-outline-variant py-4 mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">speed</span>
+<span class="font-label-md text-label-md">715 HP</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">timer</span>
+<span class="font-label-md text-label-md">3.4s 0-60</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-headline-lg text-[28px]">$330,600</span>
+<button class="bg-secondary text-white px-6 py-2 font-label-md text-label-md hover:bg-on-background transition-colors">VIEW SPECS</button>
+</div>
+</div>
+</article>
+<!-- Row 2 Card 3 (Promotion Card) -->
+<div class="relative bg-on-background p-stack-lg flex flex-col justify-center text-white overflow-hidden group">
+<div class="absolute inset-0 opacity-20 transition-opacity group-hover:opacity-30">
+<img class="w-full h-full object-cover grayscale" data-alt="An abstract close-up of carbon fiber weave and high-performance engine components. The lighting is moody and technical, emphasizing textures and precision engineering. The overall color palette is dark charcoal, steel, and subtle chrome highlights. The style is industrial and luxurious, perfect for a high-performance automotive background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZSapqvGmpJc7Vo2_LszUvIphgdtW-qX51mwktDpTC2TU5GYcSuLAk7P9VHCSWMs6u4eDX_A2vF8h_9VNd8QRMK-cL-3qEaQntWuXPFtsWPh3A0wFVefwDEqUTroC77_l9-cjv-nODbm0n7up1Rozqap-wHzsOMPdgZDw5UVetj0DhgXBwZytXpF7m6ltOH6CU4qyipYD74kKWxJEjm7gA1MzSdJvUgzL7IQ5T_Gna5V2zSbf7nv2h5qCXCSuFdgBZnV4wXywMdtQ"/>
+</div>
+<div class="relative z-10 text-center">
+<h2 class="font-headline-xl text-[40px] leading-none mb-4 italic">BESPOKE SERVICES</h2>
+<p class="font-body-md text-surface-variant/80 mb-stack-lg mx-auto max-w-[240px]">Can't find your dream spec? Our acquisition team sources worldwide.</p>
+<button class="border-2 border-primary text-primary font-label-md text-label-md px-8 py-3 hover:bg-primary hover:text-white transition-all">START INQUIRY</button>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden by default) -->
+<div class="hidden py-stack-xl flex flex-col items-center justify-center text-center" id="empty-state">
+<span class="material-symbols-outlined text-[64px] text-surface-variant mb-stack-md">search_off</span>
+<h2 class="font-headline-lg text-headline-lg mb-2">NO VEHICLES FOUND</h2>
+<p class="font-body-md text-on-surface-variant max-w-sm mb-stack-lg">Adjust your filters or clear all selections to browse our full inventory of elite machinery.</p>
+<button class="bg-on-background text-white font-label-md text-label-md px-8 py-3 uppercase tracking-widest hover:bg-primary transition-colors">Clear All Filters</button>
+</div>
+<!-- Pagination -->
+<div class="mt-stack-xl flex items-center justify-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center border border-outline hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-on-background text-white font-label-md text-label-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline font-label-md text-label-md hover:bg-surface-container-high transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline font-label-md text-label-md hover:bg-surface-container-high transition-colors">3</button>
+<span class="px-2">...</span>
+<button class="w-10 h-10 flex items-center justify-center border border-outline font-label-md text-label-md hover:bg-surface-container-high transition-colors">12</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-on-background border-t border-outline py-stack-xl mt-stack-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="text-headline-lg font-headline-lg font-bold text-surface-bright mb-stack-md">AUTOELITE</div>
+<p class="text-surface-variant/70 font-body-md text-[14px]">The definitive source for high-performance automotive editorial and luxury vehicle acquisition.</p>
+</div>
+<div>
+<h4 class="text-surface-bright font-bold font-label-md text-label-md mb-4 uppercase">Navigation</h4>
+<ul class="space-y-2">
+<li><a class="text-surface-variant/70 hover:text-surface-bright transition-colors font-label-sm text-label-sm" href="#">Sitemap</a></li>
+<li><a class="text-surface-variant/70 hover:text-surface-bright transition-colors font-label-sm text-label-sm" href="#">Newsletter</a></li>
+<li><a class="text-surface-variant/70 hover:text-surface-bright transition-colors font-label-sm text-label-sm" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-surface-bright font-bold font-label-md text-label-md mb-4 uppercase">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-surface-variant/70 hover:text-surface-bright transition-colors font-label-sm text-label-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-surface-variant/70 hover:text-surface-bright transition-colors font-label-sm text-label-sm" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-surface-bright font-bold font-label-md text-label-md mb-4 uppercase">Social</h4>
+<div class="flex gap-4">
+<a class="w-10 h-10 border border-outline-variant/30 flex items-center justify-center text-surface-bright hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="w-10 h-10 border border-outline-variant/30 flex items-center justify-center text-surface-bright hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">rss_feed</span>
+</a>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-stack-xl pt-stack-md border-t border-outline-variant/10 text-center">
+<p class="text-surface-variant/50 font-label-sm text-label-sm">© 2024 AUTOELITE EDITORIAL. ALL RIGHTS RESERVED.</p>
+</div>
+</footer>
+<script>
+        // Simple View Toggler Logic
+        const gridBtn = document.getElementById('view-grid');
+        const listBtn = document.getElementById('view-list');
+        const resultsGrid = document.getElementById('results-grid');
+
+        listBtn.addEventListener('click', () => {
+            resultsGrid.classList.remove('grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3');
+            resultsGrid.classList.add('grid-cols-1');
+            
+            // Toggle active styles
+            listBtn.classList.add('bg-surface-bright', 'shadow-sm');
+            listBtn.classList.remove('text-on-surface-variant');
+            gridBtn.classList.remove('bg-surface-bright', 'shadow-sm');
+            gridBtn.classList.add('text-on-surface-variant');
+
+            // Apply list layout styles to children
+            document.querySelectorAll('article').forEach(card => {
+                card.classList.add('flex', 'flex-col', 'md:flex-row');
+                card.querySelector('.relative').classList.remove('h-64');
+                card.querySelector('.relative').classList.add('h-48', 'md:h-auto', 'md:w-80');
+            });
+        });
+
+        gridBtn.addEventListener('click', () => {
+            resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3');
+            resultsGrid.classList.remove('grid-cols-1');
+
+            // Toggle active styles
+            gridBtn.classList.add('bg-surface-bright', 'shadow-sm');
+            gridBtn.classList.remove('text-on-surface-variant');
+            listBtn.classList.remove('bg-surface-bright', 'shadow-sm');
+            listBtn.classList.add('text-on-surface-variant');
+
+            // Revert list layout styles
+            document.querySelectorAll('article').forEach(card => {
+                card.classList.remove('flex', 'flex-col', 'md:flex-row');
+                card.querySelector('.relative').classList.add('h-64');
+                card.querySelector('.relative').classList.remove('h-48', 'md:h-auto', 'md:w-80');
+            });
+        });
+
+        // Toggle Favorite logic
+        document.querySelectorAll('article button .material-symbols-outlined').forEach(icon => {
+            icon.parentElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isFilled = icon.style.fontVariationSettings.includes("'FILL' 1");
+                icon.style.fontVariationSettings = isFilled ? "'FILL' 0" : "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Compare Vehicles | AUTOELITE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#f7f9fb",
+                        "on-primary-fixed": "#410007",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#fcfbff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-surface-variant": "#5d3f3e",
+                        "inverse-on-surface": "#eff1f3",
+                        "primary": "#b90027",
+                        "secondary": "#565e74",
+                        "primary-fixed": "#ffdad8",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#bf0029",
+                        "on-background": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "surface-container": "#eceef0",
+                        "outline": "#916e6d",
+                        "secondary-container": "#dae2fd",
+                        "inverse-primary": "#ffb3b1",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b1",
+                        "on-primary-fixed-variant": "#92001d",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f7f9fb",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "tertiary": "#4d5c72",
+                        "surface-container-low": "#f2f4f6",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-secondary-container": "#5c647a",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "outline-variant": "#e6bdbb",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-primary-container": "#fffaf9",
+                        "tertiary-container": "#65758c",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#e31837"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-desktop": "48px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "stack-xl": "64px",
+                        "stack-sm": "8px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Archivo Narrow"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Archivo Narrow"],
+                        "headline-xl": ["Archivo Narrow"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Archivo Narrow"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .diff-highlight .unique-value {
+            color: #b90027; /* primary */
+            font-weight: 600;
+        }
+        .sticky-comparison-header {
+            top: 5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        /* Custom Toggle Switch Style */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #b90027;
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-md text-primary dark:text-primary-fixed-dim docked full-width top-0 sticky z-50 border-b border-outline-variant dark:border-outline h-20">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-full">
+<div class="text-headline-lg font-headline-lg font-bold tracking-tighter text-on-surface dark:text-inverse-on-surface uppercase">
+                AUTOELITE
+            </div>
+<nav class="hidden md:flex items-center space-x-gutter">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors text-label-md font-label-md" href="#">Cars</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors text-label-md font-label-md" href="#">Reviews</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors text-label-md font-label-md" href="#">News</a>
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 text-label-md font-label-md" href="#">Compare</a>
+</nav>
+<div class="flex items-center space-x-stack-md">
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container transition-all p-2 rounded-full">person</span>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-desktop py-stack-xl">
+<!-- Breadcrumbs & Title Section -->
+<div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<nav class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant mb-2">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span>Compare</span>
+</nav>
+<h1 class="text-display-lg font-display-lg leading-none">VEHICLE <span class="text-primary">COMPARISON</span></h1>
+</div>
+<!-- Comparison Controls -->
+<div class="flex items-center gap-stack-md">
+<div class="flex items-center gap-3 bg-surface-container px-4 py-2 rounded-lg">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Highlight Differences</span>
+<div class="relative inline-block w-10 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none focus:ring-0" id="diffToggle" name="toggle" onclick="document.getElementById('comparisonTable').classList.toggle('diff-highlight')" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200" for="diffToggle"></label>
+<span class="toggle-dot absolute left-0 top-0 bg-white w-6 h-6 rounded-full border-2 border-slate-300 transition-transform duration-200"></span>
+</div>
+</div>
+<button class="bg-secondary text-on-secondary px-6 py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">share</span>
+                    SHARE
+                </button>
+</div>
+</div>
+<!-- Sticky Header for Vehicles -->
+<div class="grid grid-cols-5 gap-gutter sticky top-20 z-40 bg-background pt-4 pb-4 border-b border-outline-variant">
+<div class="col-span-1 flex items-end pb-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-tighter">Specifications Overview</span>
+</div>
+<!-- Vehicle 1 -->
+<div class="relative group">
+<div class="aspect-[16/10] bg-surface-container overflow-hidden rounded-lg mb-stack-sm border border-outline-variant">
+<img alt="911 GT3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A side-profile shot of a high-performance German sports car, finished in a metallic shark blue, parked in a minimalist, concrete architecture studio. The lighting is cold and clinical, highlighting the aerodynamic curves and large rear wing. The mood is precise, engineering-focused, and premium, mirroring a modern editorial automotive magazine style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2lgBTfhyFMxa97c1YsfwFLdIsF8ToVKfGEl2rTYlFGV8_ixy5Lvt8x1OQokusDsnJzQLw8V55iQw1KpovYgfXK-HOX3rjGqv4wY2iRvgzFy89MOxDSysgmYa8IAYNzXirNu9OHoDoYfPM-LthtkzzeLpVHmb_RPNGcV8EDT3NrVJTNsT7A2kQpAwIjwPX9o7LAqmX_jQucsMTBf1SbZPm-m2XY4deW_6n0MyjzCdbkZI614lfkugR3KIubnvqOtQSywJbaEAqttk"/>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<div class="text-headline-lg font-headline-lg uppercase truncate">Porsche 911 GT3</div>
+<div class="text-label-sm font-label-sm text-primary">2024 MODEL</div>
+</div>
+<!-- Vehicle 2 -->
+<div class="relative group">
+<div class="aspect-[16/10] bg-surface-container overflow-hidden rounded-lg mb-stack-sm border border-outline-variant">
+<img alt="McLaren 750S" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A low-angle dramatic hero shot of a British supercar in vibrant orange, sitting on a dark asphalt track at dusk. Soft gradient light from the setting sun catches the carbon fiber details and the futuristic LED headlamp signature. The aesthetic is high-contrast, professional, and evocative of high-speed performance luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALZOkWiPJMVLOTC-rE0fTT43Eq64fm9C7KZ_jlgWl4F_0me9hmEM9DOGEwzrDBiemWgwVTD39vrzAaAdj6x3JA3RT8292kI1ASsvB9NR6PRTjNSQkmA6aP-nzgU0qIPkQrw10JTAudniROZiUiV5AGhHnv-_D-T1-_v8YdoJ_bw-EVrZ2RTQUVGub1gOuK0t8byQHeqLyLixxfA8keoI9yLEnIbFepVtT45wdHBnRBWKRTKMcg2d70CrNfTGT5nyXOxVbXWb-ujlo"/>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<div class="text-headline-lg font-headline-lg uppercase truncate">McLaren 750S</div>
+<div class="text-label-sm font-label-sm text-primary">2024 MODEL</div>
+</div>
+<!-- Vehicle 3 (Empty Slot) -->
+<div class="border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center p-stack-md hover:bg-surface-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors text-4xl mb-2">add_circle</span>
+<span class="text-label-md font-label-md text-on-surface-variant">ADD VEHICLE</span>
+</div>
+<!-- Vehicle 4 (Empty Slot) -->
+<div class="border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center p-stack-md hover:bg-surface-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors text-4xl mb-2">add_circle</span>
+<span class="text-label-md font-label-md text-on-surface-variant">ADD VEHICLE</span>
+</div>
+</div>
+<!-- Performance Visuals -->
+<section class="py-stack-xl border-b border-outline-variant">
+<div class="flex items-center gap-4 mb-stack-lg">
+<h3 class="text-headline-lg font-headline-lg uppercase">Performance Benchmarks</h3>
+<div class="h-px flex-1 bg-outline-variant"></div>
+</div>
+<div class="grid grid-cols-5 gap-gutter">
+<div class="col-span-1 py-4">
+<div class="mb-stack-xl">
+<span class="text-label-md font-label-md text-on-surface-variant uppercase">0-60 MPH (SEC)</span>
+<p class="text-label-sm text-on-surface-variant/60">Lower is better</p>
+</div>
+<div>
+<span class="text-label-md font-label-md text-on-surface-variant uppercase">TOP SPEED (MPH)</span>
+<p class="text-label-sm text-on-surface-variant/60">Higher is better</p>
+</div>
+</div>
+<!-- V1 Performance -->
+<div class="space-y-stack-xl py-4">
+<div class="space-y-2">
+<div class="text-display-lg font-display-lg text-primary leading-none">3.2</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 85%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="text-display-lg font-display-lg text-on-surface leading-none">197</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 78%"></div>
+</div>
+</div>
+</div>
+<!-- V2 Performance -->
+<div class="space-y-stack-xl py-4">
+<div class="space-y-2">
+<div class="text-display-lg font-display-lg text-primary leading-none">2.7</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 95%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="text-display-lg font-display-lg text-on-surface leading-none">206</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<div class="col-span-2 flex items-center justify-center opacity-20">
+<span class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest italic">Data Pending Selection</span>
+</div>
+</div>
+</section>
+<!-- Deep Vertical Comparison Table -->
+<div class="mt-stack-xl transition-all duration-300" id="comparisonTable">
+<!-- Table Section: Powertrain -->
+<div class="mb-stack-lg">
+<div class="bg-on-background text-on-primary-fixed py-2 px-4 mb-2">
+<span class="text-label-sm font-label-md text-surface-bright uppercase tracking-[0.2em]">POWERTRAIN &amp; SPECS</span>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">MSRP</div>
+<div class="text-body-md font-bold">$182,900</div>
+<div class="text-body-md font-bold unique-value">$329,000</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">ENGINE</div>
+<div class="text-body-md">4.0L Flat 6</div>
+<div class="text-body-md unique-value">4.0L V8 Twin-Turbo</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">HORSEPOWER</div>
+<div class="text-body-md">502 hp</div>
+<div class="text-body-md unique-value">740 hp</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">TORQUE</div>
+<div class="text-body-md">346 lb-ft</div>
+<div class="text-body-md unique-value">590 lb-ft</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+</div>
+<!-- Table Section: Efficiency & Dimensions -->
+<div class="mb-stack-lg">
+<div class="bg-on-background text-on-primary-fixed py-2 px-4 mb-2">
+<span class="text-label-sm font-label-md text-surface-bright uppercase tracking-[0.2em]">EFFICIENCY &amp; CAPACITY</span>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">FUEL ECONOMY</div>
+<div class="text-body-md">15/18 MPG</div>
+<div class="text-body-md unique-value">15/22 MPG</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">WEIGHT</div>
+<div class="text-body-md">3,164 lbs</div>
+<div class="text-body-md unique-value">3,060 lbs</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+</div>
+<!-- Table Section: Tech & Interior -->
+<div class="mb-stack-lg">
+<div class="bg-on-background text-on-primary-fixed py-2 px-4 mb-2">
+<span class="text-label-sm font-label-md text-surface-bright uppercase tracking-[0.2em]">TECHNOLOGY &amp; FEATURES</span>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">INFOTAINMENT</div>
+<div class="text-body-md">PCM w/ Navigation</div>
+<div class="text-body-md unique-value">8-inch Central Touchscreen</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">DRIVE MODES</div>
+<div class="text-body-md">Normal, Sport, Track</div>
+<div class="text-body-md unique-value">Comfort, Sport, Track</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">ADAPTIVE CHASSIS</div>
+<div class="text-body-md">PASM Active Suspension</div>
+<div class="text-body-md unique-value">Proactive Chassis Control III</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+</div>
+<!-- Table Section: Warranty -->
+<div class="mb-stack-xl">
+<div class="bg-on-background text-on-primary-fixed py-2 px-4 mb-2">
+<span class="text-label-sm font-label-md text-surface-bright uppercase tracking-[0.2em]">WARRANTY</span>
+</div>
+<div class="grid grid-cols-5 gap-gutter border-b border-outline-variant py-4 hover:bg-surface-container-low transition-colors">
+<div class="text-label-md font-label-md text-on-surface-variant">BASIC</div>
+<div class="text-body-md">4yr / 50k miles</div>
+<div class="text-body-md unique-value">3yr / Unlimited miles</div>
+<div class="col-span-2 text-on-surface-variant/40">—</div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="mt-stack-xl border-t-2 border-primary pt-stack-lg flex justify-between items-center">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-label-md">
+<span class="material-symbols-outlined">arrow_back</span>
+                BACK TO LISTINGS
+            </button>
+<div class="flex gap-stack-md">
+<button class="px-8 py-3 bg-surface-container text-on-surface font-label-md rounded hover:bg-surface-container-high transition-colors uppercase">Save Comparison</button>
+<button class="px-8 py-3 bg-primary text-on-primary font-label-md rounded hover:opacity-90 transition-all uppercase shadow-lg shadow-primary/20">Check Inventory</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-on-background dark:bg-surface-container-lowest border-t border-outline dark:border-outline-variant w-full py-stack-xl mt-stack-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="text-headline-lg font-headline-lg font-bold text-surface-bright dark:text-on-background uppercase mb-stack-md">
+                    AUTOELITE
+                </div>
+<p class="text-label-sm font-label-sm text-surface-variant/70 leading-relaxed">
+                    © 2024 AUTOELITE EDITORIAL. ALL RIGHTS RESERVED.
+                    <br/>Premium automotive intelligence for the discerning enthusiast.
+                </p>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-surface-bright font-bold text-label-sm uppercase mb-2">Directory</span>
+<a class="text-surface-variant/70 hover:text-surface-bright transition-colors text-label-sm hover:underline decoration-primary" href="#">Sitemap</a>
+<a class="text-surface-variant/70 hover:text-surface-bright transition-colors text-label-sm hover:underline decoration-primary" href="#">Newsletter</a>
+<a class="text-surface-variant/70 hover:text-surface-bright transition-colors text-label-sm hover:underline decoration-primary" href="#">Contact</a>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-surface-bright font-bold text-label-sm uppercase mb-2">Legal</span>
+<a class="text-surface-variant/70 hover:text-surface-bright transition-colors text-label-sm hover:underline decoration-primary" href="#">Privacy Policy</a>
+<a class="text-surface-variant/70 hover:text-surface-bright transition-colors text-label-sm hover:underline decoration-primary" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="text-surface-bright font-bold text-label-sm uppercase">Join the Elite</span>
+<div class="flex">
+<input class="bg-surface-variant/10 border border-surface-variant/30 text-surface-bright px-3 py-2 w-full focus:outline-none focus:border-primary" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction: Smooth Scroll Handling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Toggle handling logic for visual feedback
+        const diffToggle = document.getElementById('diffToggle');
+        diffToggle.addEventListener('change', () => {
+            if(diffToggle.checked) {
+                console.log('Difference highlighting active');
+            }
+        });
+    </script>
+</body></html>
