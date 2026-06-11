@@ -7,6 +7,7 @@ import { FiGrid, FiList, FiHeart } from "react-icons/fi"
 import { getReviews } from "@/lib/api"
 import type { Review } from "@/lib/types"
 import { CHINESE_BRANDS, FALLBACK_IMAGE, PROMO_IMAGE } from "@/lib/constants"
+import { Reveal } from "@/components/ui/Reveal"
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Sort by: Newest" },
@@ -75,108 +76,112 @@ export default function CarListingsPage() {
       <Header />
       <main className="max-w-[1280px] mx-auto px-6 md:px-12 py-8 min-h-screen">
         {/* Header Section */}
-        <header className="mb-8 flex flex-col md:flex-row justify-between items-end gap-6">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-archivo font-extrabold uppercase tracking-tight">Current Inventory</h1>
-            <p className="text-xs font-mono text-muted-foreground mt-2">
-              SHOWING {reviews.length} OF {total} HIGH-PERFORMANCE VEHICLES
-            </p>
-          </div>
-          <div className="flex items-center gap-6 w-full md:w-auto">
-            <div className="flex border border-border rounded p-1 bg-muted/20">
-              <button className="p-2 bg-background shadow-sm rounded-sm"><FiGrid className="text-xl" /></button>
-              <button className="p-2 text-muted-foreground hover:bg-background rounded-sm transition-all"><FiList className="text-xl" /></button>
+        <Reveal animation="fade-down" duration={500}>
+          <header className="mb-8 flex flex-col md:flex-row justify-between items-end gap-6">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-archivo font-extrabold uppercase tracking-tight">Current Inventory</h1>
+              <p className="text-xs font-mono text-muted-foreground mt-2">
+                SHOWING {reviews.length} OF {total} HIGH-PERFORMANCE VEHICLES
+              </p>
             </div>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="bg-background border border-border text-xs font-mono px-4 py-2 min-w-[200px] outline-none focus:ring-2 focus:ring-primary"
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
-          </div>
-        </header>
+            <div className="flex items-center gap-6 w-full md:w-auto">
+              <div className="flex border border-border rounded p-1 bg-muted/20">
+                <button className="p-2 bg-background shadow-sm rounded-sm"><FiGrid className="text-xl" /></button>
+                <button className="p-2 text-muted-foreground hover:bg-background rounded-sm transition-all"><FiList className="text-xl" /></button>
+              </div>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-background border border-border text-xs font-mono px-4 py-2 min-w-[200px] outline-none focus:ring-2 focus:ring-primary"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+          </header>
+        </Reveal>
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filter Sidebar */}
           <aside className="w-full lg:w-72 flex-shrink-0 space-y-8">
-            <div className="sticky top-24">
-              <div className="flex justify-between items-center mb-6 border-b-2 border-foreground pb-2">
-                <h2 className="text-xs font-mono uppercase font-bold">Refine Results</h2>
-                <button onClick={clearAll} className="text-xs font-mono text-primary hover:underline">Clear All</button>
-              </div>
-              <div className="space-y-8 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
-                {/* Brand */}
-                <section>
-                  <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Manufacturer</h3>
-                  <div className="space-y-2">
-                    {BRANDS.map((brand) => (
-                      <label key={brand} className="flex items-center gap-3 cursor-pointer group">
-                        <input
-                          checked={selectedBrands.includes(brand)}
-                          onChange={() => toggleBrand(brand)}
-                          className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
-                          type="checkbox"
-                        />
-                        <span className="text-sm group-hover:text-primary transition-colors">{brand}</span>
-                      </label>
-                    ))}
-                  </div>
-                </section>
-
-                {/* Price Range */}
-                <section>
-                  <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Price Range</h3>
-                  <div className="space-y-4">
-                    <input className="w-full accent-primary" max="500000" min="50000" step="10000" type="range" />
-                    <div className="flex justify-between text-xs font-mono">
-                      <span>$50k</span>
-                      <span className="text-primary font-bold">$250k+</span>
+            <Reveal animation="fade-right" delay={200}>
+              <div className="sticky top-24">
+                <div className="flex justify-between items-center mb-6 border-b-2 border-foreground pb-2">
+                  <h2 className="text-xs font-mono uppercase font-bold">Refine Results</h2>
+                  <button onClick={clearAll} className="text-xs font-mono text-primary hover:underline">Clear All</button>
+                </div>
+                <div className="space-y-8 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+                  {/* Brand */}
+                  <section>
+                    <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Manufacturer</h3>
+                    <div className="space-y-2">
+                      {BRANDS.map((brand) => (
+                        <label key={brand} className="flex items-center gap-3 cursor-pointer group">
+                          <input
+                            checked={selectedBrands.includes(brand)}
+                            onChange={() => toggleBrand(brand)}
+                            className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+                            type="checkbox"
+                          />
+                          <span className="text-sm group-hover:text-primary transition-colors">{brand}</span>
+                        </label>
+                      ))}
                     </div>
-                  </div>
-                </section>
+                  </section>
 
-                {/* Body Style */}
-                <section>
-                  <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Body Style</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {["Coupe", "Sedan", "SUV", "Convertible"].map((style, i) => (
-                      <button key={style} className={`border border-border py-2 text-xs font-mono hover:bg-muted/30 transition-colors ${i === 0 ? 'border-l-2 border-l-primary' : ''}`}>
-                        {style}
-                      </button>
-                    ))}
-                  </div>
-                </section>
+                  {/* Price Range */}
+                  <section>
+                    <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Price Range</h3>
+                    <div className="space-y-4">
+                      <input className="w-full accent-primary" max="500000" min="50000" step="10000" type="range" />
+                      <div className="flex justify-between text-xs font-mono">
+                        <span>$50k</span>
+                        <span className="text-primary font-bold">$250k+</span>
+                      </div>
+                    </div>
+                  </section>
 
-                {/* Drivetrain */}
-                <section>
-                  <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Drivetrain</h3>
-                  <div className="space-y-2">
-                    {["Rear-Wheel Drive", "All-Wheel Drive"].map((dt) => (
-                      <label key={dt} className="flex items-center gap-3 cursor-pointer">
-                        <input className="w-4 h-4 border-border text-primary focus:ring-primary" name="drivetrain" type="radio" />
-                        <span className="text-sm">{dt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </section>
+                  {/* Body Style */}
+                  <section>
+                    <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Body Style</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {["Coupe", "Sedan", "SUV", "Convertible"].map((style, i) => (
+                        <button key={style} className={`border border-border py-2 text-xs font-mono hover:bg-muted/30 transition-colors ${i === 0 ? 'border-l-2 border-l-primary' : ''}`}>
+                          {style}
+                        </button>
+                      ))}
+                    </div>
+                  </section>
 
-                {/* Features */}
-                <section>
-                  <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Key Features</h3>
-                  <div className="space-y-2">
-                    {["Carbon Ceramic Brakes", "Adaptive Suspension"].map((feature) => (
-                      <label key={feature} className="flex items-center gap-3 cursor-pointer">
-                        <input className="w-4 h-4 rounded border-border text-primary focus:ring-primary" type="checkbox" />
-                        <span className="text-sm">{feature}</span>
-                      </label>
-                    ))}
-                  </div>
-                </section>
+                  {/* Drivetrain */}
+                  <section>
+                    <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Drivetrain</h3>
+                    <div className="space-y-2">
+                      {["Rear-Wheel Drive", "All-Wheel Drive"].map((dt) => (
+                        <label key={dt} className="flex items-center gap-3 cursor-pointer">
+                          <input className="w-4 h-4 border-border text-primary focus:ring-primary" name="drivetrain" type="radio" />
+                          <span className="text-sm">{dt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* Features */}
+                  <section>
+                    <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Key Features</h3>
+                    <div className="space-y-2">
+                      {["Carbon Ceramic Brakes", "Adaptive Suspension"].map((feature) => (
+                        <label key={feature} className="flex items-center gap-3 cursor-pointer">
+                          <input className="w-4 h-4 rounded border-border text-primary focus:ring-primary" type="checkbox" />
+                          <span className="text-sm">{feature}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </section>
+                </div>
               </div>
-            </div>
+            </Reveal>
           </aside>
 
           {/* Results */}
@@ -195,82 +200,87 @@ export default function CarListingsPage() {
                 ))}
               </div>
             ) : sortedReviews.length === 0 ? (
-              <div className="py-24 flex flex-col items-center justify-center text-center">
-                <span className="text-6xl text-muted-foreground mb-6">🔍</span>
-                <h2 className="text-3xl font-archivo font-bold mb-2">NO VEHICLES FOUND</h2>
-                <p className="text-sm text-muted-foreground max-w-sm mb-8">
-                  Adjust your filters or clear all selections to browse our full inventory of elite machinery.
-                </p>
-                <Button onClick={clearAll} className="px-8 py-3 text-xs font-mono uppercase tracking-widest">
-                  Clear All Filters
-                </Button>
-              </div>
+              <Reveal animation="zoom-in">
+                <div className="py-24 flex flex-col items-center justify-center text-center">
+                  <span className="text-6xl text-muted-foreground mb-6">🔍</span>
+                  <h2 className="text-3xl font-archivo font-bold mb-2">NO VEHICLES FOUND</h2>
+                  <p className="text-sm text-muted-foreground max-w-sm mb-8">
+                    Adjust your filters or clear all selections to browse our full inventory of elite machinery.
+                  </p>
+                  <Button onClick={clearAll} className="px-8 py-3 text-xs font-mono uppercase tracking-widest">
+                    Clear All Filters
+                  </Button>
+                </div>
+              </Reveal>
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {sortedReviews.map((v) => (
-                    <Link
-                      key={v.id}
-                      to={`/cars/${v.slug}`}
-                      className="bg-background border border-border overflow-hidden group hover:border-foreground transition-all flex flex-col"
-                    >
-                      <div className="relative h-64 overflow-hidden">
-                        <img
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          src={v.featured_image || FALLBACK_IMAGE}
-                          alt={v.title}
-                        />
-                        {v.featured && (
-                          <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 text-xs font-mono uppercase">
-                            Featured
-                          </div>
-                        )}
-                        <button className="absolute top-4 right-4 w-10 h-10 bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-colors">
-                          <FiHeart />
-                        </button>
-                      </div>
-                      <div className="p-6 flex flex-col flex-grow">
-                        <div className="mb-4">
-                          <h4 className="text-xs font-mono text-primary uppercase mb-1">{v.manufacturer}</h4>
-                          <h3 className="text-2xl font-archivo font-bold leading-tight">{v.model}</h3>
+                  {sortedReviews.map((v, idx) => (
+                    <Reveal key={v.id} animation="fade-up" delay={idx * 50}>
+                      <Link
+                        to={`/cars/${v.slug}`}
+                        className="bg-background border border-border overflow-hidden group hover:border-foreground transition-all flex flex-col h-full"
+                      >
+                        <div className="relative h-64 overflow-hidden">
+                          <img
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            src={v.featured_image || FALLBACK_IMAGE}
+                            alt={v.title}
+                          />
+                          {v.featured && (
+                            <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 text-xs font-mono uppercase">
+                              Featured
+                            </div>
+                          )}
+                          <button className="absolute top-4 right-4 w-10 h-10 bg-white/40 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-colors">
+                            <FiHeart />
+                          </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 border-y border-border py-4 mb-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-mono font-bold">{v.specs?.horsepower ? `${v.specs.horsepower} HP` : "—"}</span>
+                        <div className="p-6 flex flex-col flex-grow">
+                          <div className="mb-4">
+                            <h4 className="text-xs font-mono text-primary uppercase mb-1">{v.manufacturer}</h4>
+                            <h3 className="text-2xl font-archivo font-bold leading-tight">{v.model}</h3>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-mono font-bold">{v.specs?.acceleration ? `${v.specs.acceleration} 0-60` : "—"}</span>
+                          <div className="grid grid-cols-2 gap-4 border-y border-border py-4 mb-4">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-mono font-bold">{v.specs?.horsepower ? `${v.specs.horsepower} HP` : "—"}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-mono font-bold">{v.specs?.acceleration ? `${v.specs.acceleration} 0-60` : "—"}</span>
+                            </div>
+                          </div>
+                          <div className="flex justify-between items-center mt-auto">
+                            <span className="text-2xl font-archivo font-bold">
+                              {v.specs?.price ? `$${v.specs.price.toLocaleString()}` : "Contact"}
+                            </span>
+                            <span className="text-xs font-mono text-muted-foreground">{v.year}</span>
                           </div>
                         </div>
-                        <div className="flex justify-between items-center mt-auto">
-                          <span className="text-2xl font-archivo font-bold">
-                            {v.specs?.price ? `$${v.specs.price.toLocaleString()}` : "Contact"}
-                          </span>
-                          <span className="text-xs font-mono text-muted-foreground">{v.year}</span>
-                        </div>
-                      </div>
-                    </Link>
+                      </Link>
+                    </Reveal>
                   ))}
 
                   {/* Promo Card */}
-                  <div className="relative bg-foreground p-8 flex flex-col justify-center text-white overflow-hidden group">
-                    <div className="absolute inset-0 opacity-20 transition-opacity group-hover:opacity-30">
-                      <img
-                        className="w-full h-full object-cover grayscale"
-                        src={PROMO_IMAGE}
-                        alt=""
-                      />
+                  <Reveal animation="zoom-in" delay={300}>
+                    <div className="relative bg-foreground p-8 flex flex-col justify-center text-white overflow-hidden group h-full min-h-[350px]">
+                      <div className="absolute inset-0 opacity-20 transition-opacity group-hover:opacity-30">
+                        <img
+                          className="w-full h-full object-cover grayscale"
+                          src={PROMO_IMAGE}
+                          alt=""
+                        />
+                      </div>
+                      <div className="relative z-10 text-center">
+                        <h2 className="text-4xl font-archivo font-extrabold leading-none mb-4 italic">BESPOKE SERVICES</h2>
+                        <p className="text-sm text-white/60 mb-8 mx-auto max-w-[240px]">
+                          Can't find your dream spec? Our acquisition team sources worldwide.
+                        </p>
+                        <button className="border-2 border-primary text-primary text-xs font-mono px-8 py-3 hover:bg-primary hover:text-white transition-all uppercase tracking-widest">
+                          START INQUIRY
+                        </button>
+                      </div>
                     </div>
-                    <div className="relative z-10 text-center">
-                      <h2 className="text-4xl font-archivo font-extrabold leading-none mb-4 italic">BESPOKE SERVICES</h2>
-                      <p className="text-sm text-white/60 mb-8 mx-auto max-w-[240px]">
-                        Can't find your dream spec? Our acquisition team sources worldwide.
-                      </p>
-                      <button className="border-2 border-primary text-primary text-xs font-mono px-8 py-3 hover:bg-primary hover:text-white transition-all uppercase tracking-widest">
-                        START INQUIRY
-                      </button>
-                    </div>
-                  </div>
+                  </Reveal>
                 </div>
 
                 {/* Pagination */}

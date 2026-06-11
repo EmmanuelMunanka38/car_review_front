@@ -4,10 +4,11 @@ import { MdMenu } from "react-icons/md"
 import { Button } from "@/components/ui/Button"
 
 const navLinks = [
+  { label: "Home ", path: "/" },
   { label: "Cars", path: "/cars" },
-  { label: "Reviews", path: "/" },
-  { label: "News", path: "/" },
+  { label: "News", path: "/news" },
   { label: "Compare", path: "/compare" },
+  { label: "Admin", path: "/admin" },
 ]
 
 export function Header() {

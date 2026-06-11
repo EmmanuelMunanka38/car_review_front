@@ -39,7 +39,7 @@ export function Footer() {
       </div>
       <div className="px-6 md:px-12 max-w-[1280px] mx-auto py-8 border-t border-white/5 text-center">
         <span className="text-white/30 text-[10px] font-mono uppercase tracking-widest">
-          © 2024 AUTOELITE EDITORIAL. ALL RIGHTS RESERVED.
+          © 2026 AUTOELITE EDITORIAL. ALL RIGHTS RESERVED.
         </span>
       </div>
     </footer>

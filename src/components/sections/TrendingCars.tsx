@@ -1,3 +1,4 @@
+import { useRef, useState, useCallback } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/Button"
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi"
@@ -9,8 +10,47 @@ interface TrendingCarsProps {
 }
 
 export function TrendingCars({ reviews }: TrendingCarsProps) {
-  const trending = reviews.filter((r) => r.featured).slice(0, 6)
-  const display = trending.length > 0 ? trending : reviews.slice(0, 6)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const CHINESE_MAKERS = [
+    "BYD", "NIO", "XPeng", "Xpeng", "Geely",
+    "Li Auto", "LiAuto", "Great Wall", "Changan",
+    "SAIC", "Hongqi", "Wuling", "GAC",
+  ]
+
+  const chinese = reviews.filter((r) => {
+    if (!r.manufacturer) return false
+    const m = r.manufacturer.toLowerCase()
+    return CHINESE_MAKERS.some((c) => m.includes(c.toLowerCase()))
+  })
+
+  const trending = chinese.length > 0 ? chinese : reviews.filter((r) => r.featured)
+  const display = trending.length > 0 ? trending.slice(0, 6) : reviews.slice(0, 6)
+
+  const scrollToIndex = useCallback((index: number) => {
+    if (!scrollRef.current || display.length === 0) return
+    const container = scrollRef.current
+    const card = container.children[index] as HTMLElement | undefined
+    if (card) {
+      const containerRect = container.getBoundingClientRect()
+      const cardRect = card.getBoundingClientRect()
+      const offset = cardRect.left - containerRect.left + container.scrollLeft
+      container.scrollTo({ left: offset - 24, behavior: "smooth" })
+    }
+  }, [display.length])
+
+  const goNext = useCallback(() => {
+    const next = (currentIndex + 1) % display.length
+    setCurrentIndex(next)
+    scrollToIndex(next)
+  }, [currentIndex, display.length, scrollToIndex])
+
+  const goPrev = useCallback(() => {
+    const prev = (currentIndex - 1 + display.length) % display.length
+    setCurrentIndex(prev)
+    scrollToIndex(prev)
+  }, [currentIndex, display.length, scrollToIndex])
 
   return (
     <section className="py-24 bg-muted/30 overflow-hidden">
@@ -19,13 +59,18 @@ export function TrendingCars({ reviews }: TrendingCarsProps) {
           <span className="text-sm font-mono text-primary block mb-2 uppercase tracking-widest">Market Intelligence</span>
           <h2 className="text-4xl md:text-5xl font-archivo font-extrabold text-foreground uppercase tracking-tight">TRENDING NOW</h2>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="icon" className="rounded-full border-border">
-            <FiChevronLeft className="text-xl" />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-full border-border">
-            <FiChevronRight className="text-xl" />
-          </Button>
+        <div className="flex items-center gap-4">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest hidden md:block">
+            {String(currentIndex + 1).padStart(2, "0")}/{String(display.length).padStart(2, "0")}
+          </span>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" onClick={goPrev} className="rounded-full border-border">
+              <FiChevronLeft className="text-xl" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={goNext} className="rounded-full border-border">
+              <FiChevronRight className="text-xl" />
+            </Button>
+          </div>
         </div>
       </div>
       {display.length === 0 ? (
@@ -35,18 +80,23 @@ export function TrendingCars({ reviews }: TrendingCarsProps) {
           </div>
         </div>
       ) : (
-        <div className="flex gap-6 overflow-x-auto px-6 md:px-12 pb-8 hide-scrollbar snap-x">
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto px-6 md:px-12 pb-8 hide-scrollbar snap-x"
+        >
           {display.map((car, i) => (
             <Link
               key={car.id}
               to={`/cars/${car.slug}`}
-              className="min-w-[320px] md:min-w-[420px] snap-start bg-card border border-border hover:border-primary group transition-all duration-300"
+              className={`min-w-[320px] md:min-w-[420px] snap-start bg-card border border-border group transition-all duration-300 ${
+                i === currentIndex ? "border-primary" : "hover:border-primary"
+              }`}
             >
               <div className="aspect-[16/10] overflow-hidden relative">
                 <img
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  src={car.featured_image || FALLBACK_IMAGE}
-                  alt={car.title}
+                  src={car.gallery?.[0]?.image_url || car.featured_image || FALLBACK_IMAGE}
+                  alt={car.title || `${car.manufacturer} ${car.model}`}
                 />
                 <div className="absolute top-4 left-4 bg-foreground text-background px-3 py-1 text-xs font-mono">
                   {String(i + 1).padStart(2, "0")}
@@ -79,6 +129,23 @@ export function TrendingCars({ reviews }: TrendingCarsProps) {
                 </div>
               </div>
             </Link>
+          ))}
+        </div>
+      )}
+      {display.length > 1 && (
+        <div className="flex justify-center gap-2 mt-6">
+          {display.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setCurrentIndex(i)
+                scrollToIndex(i)
+              }}
+              className={`h-1.5 transition-all duration-300 ${
+                i === currentIndex ? "w-8 bg-primary" : "w-4 bg-border hover:bg-muted-foreground/30"
+              }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
           ))}
         </div>
       )}
