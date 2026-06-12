@@ -12,6 +12,11 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
+      '/carapi': {
+        target: 'https://api.carapi.dev/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/carapi/, ''),
+      },
       '/api': {
         target: 'http://localhost:4000',
         changeOrigin: true,
