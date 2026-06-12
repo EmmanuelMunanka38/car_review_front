@@ -30,11 +30,9 @@ export default function CarDetailsPage() {
       .then((res) => {
         setRelated(res.data.filter((r) => r.slug !== slug).slice(0, 4))
       })
-      .catch(() => {
-        // Fallback to local mock data if API fails or returns nothing
-        const mock = MOCK_REVIEWS.find((m) => m.slug === slug) || MOCK_REVIEWS[0]
-        setReview(mock)
-        setRelated(MOCK_REVIEWS.filter((r) => r.slug !== mock.slug).slice(0, 4))
+      .catch((err) => {
+        console.error("API Error in CarDetailsPage:", err)
+        setError("Could not load vehicle details.")
       })
       .finally(() => setLoading(false))
   }, [slug])
