@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Hero } from "@/components/sections/Hero"
+import { TrendingCars } from "@/components/sections/TrendingCars"
+import { EditorialGrid } from "@/components/sections/EditorialGrid"
 import { Button } from "@/components/ui/Button"
 import { getReviews } from "@/lib/api"
 import type { Review } from "@/lib/types"
@@ -18,15 +20,12 @@ export default function HomePage() {
   useEffect(() => {
     getReviews({ limit: 20 })
       .then((res) => {
-        if (res?.data && res.data.length > 0) {
+        if (res?.data) {
           setReviews(res.data)
-        } else {
-          setReviews(MOCK_REVIEWS as unknown as Review[])
         }
       })
       .catch((err) => {
-        console.error(err)
-        setReviews(MOCK_REVIEWS as unknown as Review[])
+        console.error("API Error in HomePage:", err)
       })
   }, [])
 
@@ -272,6 +271,8 @@ export default function HomePage() {
           </>
         )}
 
+        <EditorialGrid reviews={reviews} />
+
         {/* NEWSLETTER — redesigned */}
         <section className="py-20 bg-foreground relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
@@ -318,6 +319,9 @@ export default function HomePage() {
                       />
                       <button className="w-full py-4 bg-primary text-white text-xs font-mono font-black uppercase tracking-[0.3em] hover:bg-white hover:text-foreground transition-all">
                         Subscribe
+                      </button>
+                       <button className="w-full py-4 bg-primary text-white text-xs font-mono font-black uppercase tracking-[0.3em] hover:bg-white hover:text-foreground transition-all">
+                        Join our WhatsApp_icon  channel
                       </button>
                     </div>
                     <p className="text-[9px] font-mono text-white/20 uppercase tracking-wider mt-4 text-center">
