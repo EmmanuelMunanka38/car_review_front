@@ -121,20 +121,19 @@ export default function AdminPage() {
   )
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-inter">
+    <div className="min-h-screen bg-background text-foreground font-inter">
       <Header />
       
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)]">
-        {/* SIDEBAR: PROFESSIONAL SaaS STYLE */}
-        <aside className="w-full lg:w-72 border-r border-slate-200 bg-white flex flex-col">
-          <div className="p-6 border-b border-slate-100">
+        <aside className="w-full lg:w-72 border-r border-border bg-card flex flex-col">
+          <div className="p-6 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary flex items-center justify-center text-white rounded-lg shadow-lg shadow-primary/20">
+              <div className="w-8 h-8 bg-primary flex items-center justify-center text-white">
                 <FiActivity size={18} />
               </div>
               <div>
                 <h2 className="text-sm font-bold tracking-tight">Admin Portal</h2>
-                <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Future Automotive</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Future Automotive</p>
               </div>
             </div>
           </div>
@@ -143,18 +142,18 @@ export default function AdminPage() {
             <SidebarItem icon={FiGrid} label="Dashboard" active={activeModule === 'overview'} onClick={() => setActiveModule('overview')} />
             <SidebarItem icon={FiBox} label="Vehicle Fleet" active={activeModule === 'inventory'} onClick={() => setActiveModule('inventory')} />
             <SidebarItem icon={FiPlus} label="Add New Vehicle" active={activeModule === 'add'} onClick={() => setActiveModule('add')} />
-            <div className="py-2 my-2 border-t border-slate-100" />
+            <div className="py-2 my-2 border-t border-border" />
             <SidebarItem icon={FiTag} label="Brands" active={activeModule === 'brands'} onClick={() => setActiveModule('brands')} />
             <SidebarItem icon={FiUsers} label="User Access" active={activeModule === 'users'} onClick={() => setActiveModule('users')} />
             <SidebarItem icon={FiSettings} label="Settings" active={false} onClick={() => {}} />
           </nav>
 
-          <div className="p-6 border-t border-slate-100">
-            <div className="bg-slate-50 p-4 flex items-center gap-3 rounded-xl">
-              <div className="w-8 h-8 bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs rounded-full">AR</div>
+          <div className="p-6 border-t border-border">
+            <div className="bg-muted/20 p-4 flex items-center gap-3">
+              <div className="w-8 h-8 bg-muted/30 flex items-center justify-center text-muted-foreground font-bold text-xs rounded-full">AR</div>
               <div>
                 <p className="text-xs font-bold leading-none">Alex Rivera</p>
-                <p className="text-[10px] text-slate-400 font-medium mt-1">Super Admin</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1">Super Admin</p>
               </div>
             </div>
           </div>
@@ -163,7 +162,7 @@ export default function AdminPage() {
         {/* MAIN CONTENT DISPLAY */}
         <main className="flex-1 overflow-y-auto">
           {success && (
-            <div className="m-6 p-4 bg-green-50 border border-green-100 text-green-700 text-sm flex items-center justify-between rounded-xl shadow-sm animate-in fade-in slide-in-from-top-4">
+            <div className="m-6 p-4 bg-green-50 border border-green-100 text-green-700 text-sm flex items-center justify-between animate-in fade-in slide-in-from-top-4">
               <div className="flex items-center gap-3">
                 <FiCheck className="text-green-500" />
                 <span className="font-medium">{success}</span>
@@ -172,7 +171,7 @@ export default function AdminPage() {
             </div>
           )}
           {error && (
-            <div className="m-6 p-4 bg-red-50 border border-red-100 text-red-700 text-sm flex items-center justify-between rounded-xl shadow-sm animate-in fade-in slide-in-from-top-4">
+            <div className="m-6 p-4 bg-red-50 border border-red-100 text-red-700 text-sm flex items-center justify-between animate-in fade-in slide-in-from-top-4">
               <div className="flex items-center gap-3">
                 <FiXIcon className="text-red-500" />
                 <span className="font-medium">{error}</span>
@@ -182,15 +181,15 @@ export default function AdminPage() {
           )}
 
           {activeModule === 'overview' && (
-            <div className="p-8 md:p-12 space-y-10 max-w-[1400px] mx-auto">
+              <div className="p-8 md:p-12 space-y-10 max-w-[1400px] mx-auto">
               <Reveal animation="fade-down" duration={400}>
                 <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                   <div>
-                    <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-slate-900">Dashboard <span className="text-primary italic">Overview</span></h1>
-                    <p className="text-slate-500 text-sm font-medium mt-1">Real-time performance and inventory metrics.</p>
+                    <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-foreground">Dashboard <span className="text-primary italic">Overview</span></h1>
+                    <p className="text-muted-foreground text-sm font-medium mt-1">Real-time performance and inventory metrics.</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Last Updated: Just now</span>
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Last Updated: Just now</span>
                     <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
                   </div>
                 </header>
@@ -215,12 +214,12 @@ export default function AdminPage() {
               {/* ANALYTICS SECTION */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <Reveal animation="fade-right" delay={300} className="lg:col-span-2">
-                  <div className="bg-white border border-slate-200 p-8 h-full rounded-2xl shadow-sm">
+                  <div className="bg-card border border-border p-8 h-full">
                     <div className="flex justify-between items-center mb-10">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-3">
-                        <div className="w-1.5 h-6 bg-primary rounded-full" /> Traffic Analytics
+                      <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-primary" /> Traffic Analytics
                       </h3>
-                      <select className="bg-slate-50 border-none text-[10px] font-bold uppercase tracking-widest px-4 py-2 outline-none rounded-lg">
+                      <select className="bg-muted/20 border-none text-[10px] font-bold uppercase tracking-widest px-4 py-2 outline-none">
                         <option>Last 7 Days</option>
                         <option>Last 30 Days</option>
                       </select>
@@ -234,11 +233,11 @@ export default function AdminPage() {
                               <stop offset="95%" stopColor="#E31837" stopOpacity={0}/>
                             </linearGradient>
                           </defs>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                           <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} axisLine={false} dy={10} />
                           <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} axisLine={false} />
                           <Tooltip 
-                            contentStyle={{ backgroundColor: '#fff', border: '1px solid #E2E8F0', borderRadius: '12px' }}
+                            contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
                             itemStyle={{ color: '#E31837', fontWeight: 'bold' }}
                           />
                           <Area type="monotone" dataKey="views" stroke="#E31837" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
@@ -249,7 +248,7 @@ export default function AdminPage() {
                 </Reveal>
 
                 <Reveal animation="fade-left" delay={400}>
-                  <div className="bg-slate-900 text-white p-8 flex flex-col justify-between h-full rounded-2xl shadow-xl">
+                  <div className="bg-foreground text-background p-8 flex flex-col justify-between h-full">
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-primary mb-10">System Status</h3>
                       <div className="space-y-8">
@@ -258,8 +257,8 @@ export default function AdminPage() {
                         <ProfessionalHealthMetric label="Media Assets" value="Stable" progress={100} />
                       </div>
                     </div>
-                    <div className="mt-12 pt-8 border-t border-slate-800">
-                      <p className="text-[10px] text-slate-500 font-mono uppercase leading-relaxed">
+                    <div className="mt-12 pt-8 border-t border-background/10">
+                      <p className="text-[10px] text-background/40 font-mono uppercase leading-relaxed">
                         All systems are operating within normal parameters. Next scheduled maintenance: June 24, 02:00 AM.
                       </p>
                     </div>
@@ -274,21 +273,21 @@ export default function AdminPage() {
               <Reveal animation="fade-down">
                 <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div>
-                    <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-slate-900">Vehicle <span className="text-primary italic">Fleet</span></h1>
-                    <p className="text-slate-500 text-sm font-medium">Manage and monitor all vehicle listings.</p>
+                    <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-foreground">Vehicle <span className="text-primary italic">Fleet</span></h1>
+                    <p className="text-muted-foreground text-sm font-medium">Manage and monitor all vehicle listings.</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
                       <input 
                         type="text" 
                         placeholder="Search fleet..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-white border border-slate-200 px-12 py-3 text-sm rounded-xl focus:ring-2 ring-primary/10 outline-none w-72"
+                        className="bg-background border border-border px-12 py-3 text-sm focus:ring-2 ring-primary/10 outline-none w-72"
                       />
                     </div>
-                    <Button onClick={() => setActiveModule('add')} className="bg-primary px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-xl">
+                    <Button onClick={() => setActiveModule('add')} className="bg-primary px-6 py-3 text-xs font-bold uppercase tracking-wider">
                       Add Vehicle
                     </Button>
                   </div>
@@ -296,34 +295,34 @@ export default function AdminPage() {
               </Reveal>
 
               <Reveal animation="fade-up" delay={200}>
-                <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <div className="bg-card border border-border overflow-hidden">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-slate-50/50 border-b border-slate-200">
-                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">Vehicle Details</th>
-                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">Spec Configuration</th>
-                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">Visibility</th>
-                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-slate-500 text-right">Actions</th>
+                      <tr className="bg-muted/10 border-b border-border">
+                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Vehicle Details</th>
+                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Spec Configuration</th>
+                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Visibility</th>
+                        <th className="p-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border">
                       {filteredReviews.map((r) => (
-                        <tr key={r.id} className="hover:bg-slate-50/50 transition-colors group">
+                        <tr key={r.id} className="hover:bg-muted/10 transition-colors group">
                           <td className="p-6">
                             <div className="flex items-center gap-5">
-                              <div className="w-16 h-10 overflow-hidden border border-slate-200 rounded-lg group-hover:scale-105 transition-transform shadow-sm">
+                              <div className="w-16 h-10 overflow-hidden border border-border group-hover:scale-105 transition-transform">
                                 <img src={r.featured_image || ''} className="w-full h-full object-cover" />
                               </div>
                               <div>
-                                <p className="text-sm font-bold text-slate-900">{r.manufacturer} {r.model}</p>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{r.year} Model Edition</p>
+                                <p className="text-sm font-bold text-foreground">{r.manufacturer} {r.model}</p>
+                                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">{r.year} Model Edition</p>
                               </div>
                             </div>
                           </td>
                           <td className="p-6">
                             <div className="flex flex-col gap-1">
-                              <span className="text-xs font-bold text-slate-700">{r.specs?.engine || 'BEV System'}</span>
-                              <span className="text-[10px] font-medium text-slate-400">{r.specs?.horsepower} HP • {r.specs?.fuel_type}</span>
+                              <span className="text-xs font-bold text-foreground/80">{r.specs?.engine || 'BEV System'}</span>
+                              <span className="text-[10px] font-medium text-muted-foreground">{r.specs?.horsepower} HP • {r.specs?.fuel_type}</span>
                             </div>
                           </td>
                           <td className="p-6">
@@ -336,8 +335,8 @@ export default function AdminPage() {
                           </td>
                           <td className="p-6 text-right">
                             <div className="flex justify-end gap-2">
-                              <button className="p-2.5 text-slate-400 hover:text-primary hover:bg-slate-50 rounded-lg transition-all"><FiEdit size={16} /></button>
-                              <button onClick={() => handleDelete(r.id)} className="p-2.5 text-slate-400 hover:text-red-500 hover:bg-slate-50 rounded-lg transition-all"><FiTrash2 size={16} /></button>
+                              <button className="p-2.5 text-muted-foreground hover:text-primary hover:bg-muted/20 transition-all"><FiEdit size={16} /></button>
+                              <button onClick={() => handleDelete(r.id)} className="p-2.5 text-muted-foreground hover:text-red-500 hover:bg-muted/20 transition-all"><FiTrash2 size={16} /></button>
                             </div>
                           </td>
                         </tr>
@@ -353,13 +352,13 @@ export default function AdminPage() {
             <div className="p-8 md:p-12 max-w-[1000px] mx-auto">
               <Reveal animation="fade-down">
                 <header className="mb-12">
-                  <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-slate-900">New Vehicle <span className="text-primary italic">Entry</span></h1>
-                  <p className="text-slate-500 text-sm font-medium mt-1">Populate all technical specifications and media assets.</p>
+                  <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-foreground">New Vehicle <span className="text-primary italic">Entry</span></h1>
+                  <p className="text-muted-foreground text-sm font-medium mt-1">Populate all technical specifications and media assets.</p>
                 </header>
               </Reveal>
 
               <Reveal animation="fade-up" delay={200}>
-                <form onSubmit={handleSubmit} className="bg-white border border-slate-200 p-8 md:p-12 space-y-12 shadow-sm rounded-3xl">
+                <form onSubmit={handleSubmit} className="bg-card border border-border p-8 md:p-12 space-y-12">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                     <ProfessionalInput label="Manufacturer" name="manufacturer" value={formData.manufacturer} onChange={handleFormChange} placeholder="e.g., Porsche" />
                     <ProfessionalInput label="Model Name" name="model" value={formData.model} onChange={handleFormChange} placeholder="e.g., Taycan GT" />
@@ -368,29 +367,29 @@ export default function AdminPage() {
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Deep-Dive Content</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Deep-Dive Content</label>
                     <textarea 
                       name="content" 
                       value={formData.content} 
                       onChange={handleFormChange} 
                       rows={8} 
-                      className="w-full bg-slate-50 border-none p-6 text-sm font-medium rounded-2xl focus:ring-2 ring-primary/10 outline-none placeholder:text-slate-300"
+                      className="w-full bg-muted/20 border-none p-6 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-muted-foreground/30"
                       placeholder="Enter detailed review and technical analysis..."
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-slate-100">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-border">
                     <ProfessionalInput label="Horsepower" name="specs.horsepower" type="number" value={formData.specs.horsepower} onChange={handleFormChange} />
                     <ProfessionalInput label="Top Speed" name="specs.top_speed" value={formData.specs.top_speed} onChange={handleFormChange} />
                     <ProfessionalInput label="Base MSRP ($)" name="specs.price" type="number" value={formData.specs.price} onChange={handleFormChange} />
                   </div>
 
-                  <div className="pt-8 border-t border-slate-100">
+                  <div className="pt-8 border-t border-border">
                     <ProfessionalInput label="Featured Image URL" name="featured_image" value={formData.featured_image} onChange={handleFormChange} placeholder="https://images.unsplash.com/..." />
                   </div>
                   
                   <div className="pt-10">
-                    <Button disabled={loading} className="w-full bg-slate-900 hover:bg-primary text-white py-8 text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 rounded-2xl shadow-xl">
+                    <Button disabled={loading} className="w-full bg-secondary hover:bg-primary text-secondary-foreground hover:text-primary-foreground py-8 text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300">
                       {loading ? "Processing Data..." : "Publish Vehicle Entry"}
                     </Button>
                   </div>
@@ -409,25 +408,25 @@ function SidebarItem({ icon: Icon, label, active, onClick }: any) {
   return (
     <button 
       onClick={onClick}
-      className={`w-full flex items-center gap-3.5 px-5 py-3.5 transition-all duration-200 group rounded-xl ${
+      className={`w-full flex items-center gap-3.5 px-5 py-3.5 transition-all duration-200 group ${
         active 
-          ? 'bg-slate-900 text-white shadow-xl shadow-slate-200' 
-          : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+          ? 'bg-secondary text-secondary-foreground' 
+          : 'text-muted-foreground hover:bg-muted/20 hover:text-foreground'
       }`}
     >
       <Icon size={18} className={active ? 'text-primary scale-110' : 'group-hover:text-primary transition-colors'} />
-      <span className={`text-[11px] font-bold uppercase tracking-wider ${active ? '' : ''}`}>{label}</span>
+      <span className="text-[11px] font-bold uppercase tracking-wider">{label}</span>
     </button>
   )
 }
 
 function ProfessionalStatCard({ label, value, icon: Icon, trend }: any) {
   return (
-    <div className="bg-white border border-slate-200 p-7 transition-all group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-md">
+    <div className="bg-card border border-border p-7 transition-all group relative overflow-hidden">
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{label}</p>
-          <p className="text-3xl font-archivo font-black tracking-tight text-slate-900">{value}</p>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">{label}</p>
+          <p className="text-3xl font-archivo font-black tracking-tight text-foreground">{value}</p>
           {trend && (
             <div className="flex items-center gap-1.5 mt-2">
               <span className="text-[10px] font-bold text-green-500">{trend}</span>
@@ -435,7 +434,7 @@ function ProfessionalStatCard({ label, value, icon: Icon, trend }: any) {
             </div>
           )}
         </div>
-        <div className="p-3 bg-slate-50 text-slate-400 group-hover:text-primary group-hover:bg-primary/5 transition-all rounded-xl">
+        <div className="p-3 bg-muted/20 text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all">
           <Icon size={20} />
         </div>
       </div>
@@ -447,10 +446,10 @@ function ProfessionalHealthMetric({ label, value, progress }: any) {
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-end">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-background/40">{label}</span>
         <span className="text-xs font-bold text-primary">{value}</span>
       </div>
-      <div className="h-1.5 bg-slate-800 overflow-hidden rounded-full">
+      <div className="h-1.5 bg-background/10 overflow-hidden rounded-full">
         <div 
           className="h-full bg-primary transition-all duration-1000" 
           style={{ width: `${progress}%` }} 
@@ -463,14 +462,14 @@ function ProfessionalHealthMetric({ label, value, progress }: any) {
 function ProfessionalInput({ label, name, value, onChange, type = "text", placeholder }: any) {
   return (
     <div className="space-y-2">
-      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{label}</label>
+      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</label>
       <input 
         type={type} 
         name={name} 
         value={value} 
         onChange={onChange} 
         placeholder={placeholder}
-        className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-slate-300" 
+        className="w-full bg-muted/20 border-none p-4 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-muted-foreground/30" 
       />
     </div>
   )
