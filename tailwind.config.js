@@ -32,10 +32,10 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        muted: {
-          DEFAULT: "#64748B", // Cool Gray
-          foreground: "#F8FAFC",
-        },
+      muted: {
+        DEFAULT: "hsl(var(--muted))",
+        foreground: "hsl(var(--muted-foreground))",
+      },
         accent: {
           DEFAULT: "#E31837",
           foreground: "#ffffff",

@@ -4,10 +4,11 @@ import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Button } from "@/components/ui/Button"
 import { FiGrid, FiList, FiHeart } from "react-icons/fi"
-import { getReviews } from "@/lib/api"
+import { getReviews, getMakes } from "@/lib/api"
 import type { Review } from "@/lib/types"
-import { CHINESE_BRANDS, FALLBACK_IMAGE, PROMO_IMAGE } from "@/lib/constants"
+import { FALLBACK_IMAGE, PROMO_IMAGE } from "@/lib/constants"
 import { Reveal } from "@/components/ui/Reveal"
+import { MOCK_REVIEWS } from "@/lib/mockData"
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Sort by: Newest" },
@@ -16,11 +17,10 @@ const SORT_OPTIONS = [
   { value: "performance", label: "Performance: 0-60 MPH" },
 ]
 
-const BRANDS = CHINESE_BRANDS
-
 export default function CarListingsPage() {
   const [searchParams] = useSearchParams()
   const [reviews, setReviews] = useState<Review[]>([])
+  const [brands, setBrands] = useState<string[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [selectedBrands, setSelectedBrands] = useState<string[]>(() => {
@@ -32,15 +32,30 @@ export default function CarListingsPage() {
   const limit = 9
 
   useEffect(() => {
+    getMakes().then(res => {
+      if (res.length > 0) {
+        setBrands(res)
+      } else {
+        // Fallback to constants if API fails
+        import("@/lib/constants").then(m => setBrands(m.CHINESE_BRANDS))
+      }
+    })
+  }, [])
+
+  useEffect(() => {
     setLoading(true)
     const manufacturer = selectedBrands.length > 0 ? selectedBrands[0] : undefined
 
     getReviews({ page, limit, manufacturer })
       .then((res) => {
         setReviews(res.data)
-        setTotal(res.pagination?.total || 0)
+        setTotal(res.pagination?.total || res.data?.length || 0)
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error("API Error in CarListingsPage:", err)
+        setReviews([])
+        setTotal(0)
+      })
       .finally(() => setLoading(false))
   }, [selectedBrands, page, limit])
 
@@ -116,7 +131,7 @@ export default function CarListingsPage() {
                   <section>
                     <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Manufacturer</h3>
                     <div className="space-y-2">
-                      {BRANDS.map((brand) => (
+                      {brands.map((brand) => (
                         <label key={brand} className="flex items-center gap-3 cursor-pointer group">
                           <input
                             checked={selectedBrands.includes(brand)}

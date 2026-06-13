@@ -25,8 +25,8 @@ export function TrendingCars({ reviews }: TrendingCarsProps) {
     return CHINESE_MAKERS.some((c) => m.includes(c.toLowerCase()))
   })
 
-  const trending = chinese.length > 0 ? chinese : reviews.filter((r) => r.featured)
-  const display = trending.length > 0 ? trending.slice(0, 6) : reviews.slice(0, 6)
+  const trending = chinese.length > 0 ? chinese : reviews
+  const display = trending.length > 0 ? trending.slice(0, 6) : []
 
   const scrollToIndex = useCallback((index: number) => {
     if (!scrollRef.current || display.length === 0) return
