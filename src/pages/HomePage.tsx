@@ -3,19 +3,19 @@ import { Link } from "react-router-dom"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Hero } from "@/components/sections/Hero"
-import { TrendingCars } from "@/components/sections/TrendingCars"
 import { EditorialGrid } from "@/components/sections/EditorialGrid"
 import { Button } from "@/components/ui/Button"
 import { getReviews } from "@/lib/api"
 import type { Review } from "@/lib/types"
 import { CATEGORY_IMAGES, FALLBACK_IMAGE } from "@/lib/constants"
-import { MOCK_REVIEWS } from "@/lib/mockData"
 import { FiSearch, FiArrowRight, FiStar, FiZap } from "react-icons/fi"
 import { Reveal } from "@/components/ui/Reveal"
 
 export default function HomePage() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [searchQuery, setSearchQuery] = useState("")
+  const [newsletterEmail, setNewsletterEmail] = useState("")
+  const [newsletterDone, setNewsletterDone] = useState(false)
 
   useEffect(() => {
     getReviews({ limit: 20 })
@@ -250,7 +250,7 @@ export default function HomePage() {
                   {categories.map((cat, idx) => (
                     <Reveal key={cat.name} animation="zoom-in" delay={idx * 100}>
                       <Link
-                        to={`/cars?manufacturer=${cat.name}`}
+                        to={`/cars?search=${cat.name}`}
                         className="group relative h-96 overflow-hidden border border-border bg-foreground block"
                       >
                         <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={cat.image} alt={cat.name} />
@@ -309,21 +309,31 @@ export default function HomePage() {
               </div>
               <div className="lg:col-span-2">
                 <Reveal animation="fade-left" delay={200}>
-                  <form className="border border-white/20 bg-white/5 p-8 md:p-10">
+                  <form
+                    className="border border-white/20 bg-white/5 p-8 md:p-10"
+                    onSubmit={(e) => { e.preventDefault(); if (newsletterEmail.trim()) setNewsletterDone(true) }}
+                  >
                     <p className="text-[10px] font-mono font-bold text-primary uppercase tracking-[0.3em] mb-6">Subscribe to Core</p>
-                    <div className="space-y-4">
-                      <input
-                        className="w-full px-5 py-4 bg-transparent border border-white/20 text-sm font-mono outline-none uppercase tracking-widest text-white placeholder:text-white/20 focus:border-primary transition-colors"
-                        placeholder="Your email address"
-                        type="email"
-                      />
-                      <button className="w-full py-4 bg-primary text-white text-xs font-mono font-black uppercase tracking-[0.3em] hover:bg-white hover:text-foreground transition-all">
-                        Subscribe
-                      </button>
-                       <button className="w-full py-4 bg-primary text-white text-xs font-mono font-black uppercase tracking-[0.3em] hover:bg-white hover:text-foreground transition-all">
-                        Join our WhatsApp_icon  channel
-                      </button>
-                    </div>
+                    {newsletterDone ? (
+                      <p className="text-green-400 text-sm font-mono text-center py-8">✓ Subscribed! Check your inbox.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        <input
+                          className="w-full px-5 py-4 bg-transparent border border-white/20 text-sm font-mono outline-none uppercase tracking-widest text-white placeholder:text-white/20 focus:border-primary transition-colors"
+                          placeholder="Your email address"
+                          type="email"
+                          value={newsletterEmail}
+                          onChange={(e) => setNewsletterEmail(e.target.value)}
+                          required
+                        />
+                        <button type="submit" className="w-full py-4 bg-primary text-white text-xs font-mono font-black uppercase tracking-[0.3em] hover:bg-white hover:text-foreground transition-all">
+                          Subscribe
+                        </button>
+                        <button type="button" onClick={() => setNewsletterEmail("whatsapp@example.com")} className="w-full py-4 bg-primary text-white text-xs font-mono font-black uppercase tracking-[0.3em] hover:bg-white hover:text-foreground transition-all">
+                          Join our WhatsApp channel
+                        </button>
+                      </div>
+                    )}
                     <p className="text-[9px] font-mono text-white/20 uppercase tracking-wider mt-4 text-center">
                       Join 2,400+ automotive professionals
                     </p>

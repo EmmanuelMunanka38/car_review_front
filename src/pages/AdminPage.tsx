@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Button } from "@/components/ui/Button"
-import { createReview, getReviews, deleteReview } from "@/lib/api"
+import { createReview, updateReview, adminGetReviews, deleteReview } from "@/lib/api"
 import type { Review, ReviewInput } from "@/lib/types"
+import { useAuth } from "@/lib/auth"
 import { 
   FiGrid, FiBox, FiUsers, FiSettings, 
   FiPlus, FiTrash2, FiEdit, FiSearch, FiActivity, FiTag,
-  FiZap, FiCheck, FiX as FiXIcon, FiArrowUpRight
+  FiZap, FiCheck, FiX as FiXIcon, FiArrowUpRight, FiLogOut
 } from "react-icons/fi"
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
@@ -18,12 +20,18 @@ import { Reveal } from "@/components/ui/Reveal"
 type AdminModule = "overview" | "inventory" | "add" | "brands" | "users"
 
 export default function AdminPage() {
+  const { user, isAuthenticated, isAdmin, loading: authLoading, logout } = useAuth()
+  const navigate = useNavigate()
   const [activeModule, setActiveModule] = useState<AdminModule>("overview")
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [contentBody, setContentBody] = useState("")
+  const [contentPros, setContentPros] = useState("")
+  const [contentCons, setContentCons] = useState("")
 
   // Form State
   const [formData, setFormData] = useState<ReviewInput>({
@@ -57,13 +65,19 @@ export default function AdminPage() {
   ]
 
   useEffect(() => {
+    if (!authLoading && (!isAuthenticated || !isAdmin)) {
+      navigate("/signin")
+    }
+  }, [authLoading, isAuthenticated, isAdmin, navigate])
+
+  useEffect(() => {
     fetchData()
   }, [])
 
   const fetchData = async () => {
     setLoading(true)
     try {
-      const res = await getReviews({ limit: 100 })
+      const res = await adminGetReviews({ limit: 100 })
       setReviews(res.data)
     } catch (err) {
       console.error("Failed to fetch data", err)
@@ -104,7 +118,15 @@ export default function AdminPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      await createReview(formData)
+      const payload = {
+        ...formData,
+        content: {
+          body: contentBody,
+          pros: contentPros.split('\n').map(s => s.trim()).filter(Boolean),
+          cons: contentCons.split('\n').map(s => s.trim()).filter(Boolean),
+        },
+      }
+      await createReview(payload)
       setSuccess("New vehicle published successfully")
       setActiveModule("inventory")
       fetchData()
@@ -148,13 +170,18 @@ export default function AdminPage() {
             <SidebarItem icon={FiSettings} label="Settings" active={false} onClick={() => {}} />
           </nav>
 
-          <div className="p-6 border-t border-border">
+          <div className="p-4 border-t border-border space-y-3">
             <div className="bg-muted/20 p-4 flex items-center gap-3">
-              <div className="w-8 h-8 bg-muted/30 flex items-center justify-center text-muted-foreground font-bold text-xs rounded-full">AR</div>
-              <div>
-                <p className="text-xs font-bold leading-none">Alex Rivera</p>
-                <p className="text-[10px] text-muted-foreground font-medium mt-1">Super Admin</p>
+              <div className="w-8 h-8 bg-muted/30 flex items-center justify-center text-muted-foreground font-bold text-xs rounded-full">
+                {(user?.full_name || user?.email || "?")[0].toUpperCase()}
               </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold leading-none truncate">{user?.full_name || user?.email}</p>
+                <p className="text-[10px] text-muted-foreground font-medium mt-1 capitalize">{user?.role || "User"}</p>
+              </div>
+              <button onClick={logout} className="text-muted-foreground hover:text-primary transition-colors">
+                <FiLogOut size={14} />
+              </button>
             </div>
           </div>
         </aside>
@@ -348,6 +375,77 @@ export default function AdminPage() {
             </div>
           )}
 
+          {activeModule === 'brands' && (
+            <div className="p-8 md:p-12 max-w-[1000px] mx-auto">
+              <Reveal animation="fade-down">
+                <header className="mb-8">
+                  <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-foreground">Brand <span className="text-primary italic">Management</span></h1>
+                  <p className="text-muted-foreground text-sm font-medium mt-1">All manufacturers currently in the fleet.</p>
+                </header>
+              </Reveal>
+              <Reveal animation="fade-up" delay={200}>
+                <div className="bg-card border border-border p-8">
+                  {reviews.length === 0 ? (
+                    <p className="text-muted-foreground text-sm">No vehicles in fleet yet.</p>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {Array.from(new Set(reviews.map(r => r.manufacturer))).sort().map(brand => {
+                        const count = reviews.filter(r => r.manufacturer === brand).length
+                        return (
+                          <div key={brand} className="bg-muted/20 p-6 text-center border border-border hover:border-primary transition-colors">
+                            <p className="text-lg font-archivo font-bold uppercase">{brand}</p>
+                            <p className="text-[10px] font-mono text-muted-foreground mt-1">{count} vehicle{count !== 1 ? 's' : ''}</p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </Reveal>
+            </div>
+          )}
+
+          {activeModule === 'users' && (
+            <div className="p-8 md:p-12 max-w-[1000px] mx-auto">
+              <Reveal animation="fade-down">
+                <header className="mb-8">
+                  <h1 className="text-3xl font-archivo font-black uppercase tracking-tight text-foreground">User <span className="text-primary italic">Access</span></h1>
+                  <p className="text-muted-foreground text-sm font-medium mt-1">Manage editorial team members and permissions.</p>
+                </header>
+              </Reveal>
+              <Reveal animation="fade-up" delay={200}>
+                <div className="bg-card border border-border overflow-hidden">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-muted/10 border-b border-border">
+                        <th className="p-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Name</th>
+                        <th className="p-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Role</th>
+                        <th className="p-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      <tr className="hover:bg-muted/10 transition-colors">
+                        <td className="p-4"><span className="text-sm font-bold">Alex Rivera</span></td>
+                        <td className="p-4"><span className="text-xs text-muted-foreground">Super Admin</span></td>
+                        <td className="p-4"><span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-green-50 text-green-600"><div className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active</span></td>
+                      </tr>
+                      <tr className="hover:bg-muted/10 transition-colors">
+                        <td className="p-4"><span className="text-sm font-bold">Jordan Chen</span></td>
+                        <td className="p-4"><span className="text-xs text-muted-foreground">Editor</span></td>
+                        <td className="p-4"><span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-green-50 text-green-600"><div className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active</span></td>
+                      </tr>
+                      <tr className="hover:bg-muted/10 transition-colors">
+                        <td className="p-4"><span className="text-sm font-bold">Samir Patel</span></td>
+                        <td className="p-4"><span className="text-xs text-muted-foreground">Contributor</span></td>
+                        <td className="p-4"><span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-yellow-50 text-yellow-600"><div className="w-1.5 h-1.5 rounded-full bg-yellow-500" /> Pending</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </Reveal>
+            </div>
+          )}
+
           {activeModule === 'add' && (
             <div className="p-8 md:p-12 max-w-[1000px] mx-auto">
               <Reveal animation="fade-down">
@@ -366,16 +464,37 @@ export default function AdminPage() {
                     <ProfessionalInput label="Model Year" name="year" type="number" value={formData.year} onChange={handleFormChange} />
                   </div>
                   
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Deep-Dive Content</label>
-                    <textarea 
-                      name="content" 
-                      value={formData.content} 
-                      onChange={handleFormChange} 
-                      rows={8} 
-                      className="w-full bg-muted/20 border-none p-6 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-muted-foreground/30"
-                      placeholder="Enter detailed review and technical analysis..."
-                    />
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Body Content</label>
+                      <textarea
+                        value={contentBody}
+                        onChange={(e) => setContentBody(e.target.value)}
+                        rows={6}
+                        className="w-full bg-muted/20 border-none p-6 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-muted-foreground/30"
+                        placeholder="Enter detailed review and technical analysis..."
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Pros (one per line)</label>
+                      <textarea
+                        value={contentPros}
+                        onChange={(e) => setContentPros(e.target.value)}
+                        rows={4}
+                        className="w-full bg-muted/20 border-none p-6 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-muted-foreground/30"
+                        placeholder="Exceptional handling at high speeds&#10;Intuitive infotainment system&#10;Best-in-class range"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Cons (one per line)</label>
+                      <textarea
+                        value={contentCons}
+                        onChange={(e) => setContentCons(e.target.value)}
+                        rows={4}
+                        className="w-full bg-muted/20 border-none p-6 text-sm font-medium focus:ring-2 ring-primary/10 outline-none placeholder:text-muted-foreground/30"
+                        placeholder="Limited rear headroom&#10;Premium price point&#10;Charging network gaps"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-border">

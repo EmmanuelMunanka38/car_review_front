@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
@@ -8,7 +8,6 @@ import { getReviews, getMakes } from "@/lib/api"
 import type { Review } from "@/lib/types"
 import { FALLBACK_IMAGE, PROMO_IMAGE } from "@/lib/constants"
 import { Reveal } from "@/components/ui/Reveal"
-import { MOCK_REVIEWS } from "@/lib/mockData"
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Sort by: Newest" },
@@ -23,12 +22,17 @@ export default function CarListingsPage() {
   const [brands, setBrands] = useState<string[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "")
   const [selectedBrands, setSelectedBrands] = useState<string[]>(() => {
     const m = searchParams.get("manufacturer")
     return m ? m.split(",") : []
   })
   const [sort, setSort] = useState(searchParams.get("sort") || "newest")
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1)
+  const [priceRange, setPriceRange] = useState<[number, number]>([50000, 500000])
+  const [selectedBody, setSelectedBody] = useState<string | null>(null)
+  const [selectedDrivetrain, setSelectedDrivetrain] = useState<string | null>(null)
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const limit = 9
 
   useEffect(() => {
@@ -46,10 +50,14 @@ export default function CarListingsPage() {
     setLoading(true)
     const manufacturer = selectedBrands.length > 0 ? selectedBrands[0] : undefined
 
-    getReviews({ page, limit, manufacturer })
+    getReviews({ page, limit, manufacturer, search: searchQuery || undefined })
       .then((res) => {
-        setReviews(res.data)
-        setTotal(res.pagination?.total || res.data?.length || 0)
+        let data = res.data || []
+        if (selectedBrands.length > 1) {
+          data = data.filter(r => selectedBrands.includes(r.manufacturer))
+        }
+        setReviews(data)
+        setTotal(res.pagination?.total || data.length || 0)
       })
       .catch((err) => {
         console.error("API Error in CarListingsPage:", err)
@@ -57,7 +65,7 @@ export default function CarListingsPage() {
         setTotal(0)
       })
       .finally(() => setLoading(false))
-  }, [selectedBrands, page, limit])
+  }, [selectedBrands, page, limit, searchQuery])
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
@@ -67,13 +75,26 @@ export default function CarListingsPage() {
   }
 
   const clearAll = () => {
+    setSearchQuery("")
     setSelectedBrands([])
+    setPriceRange([50000, 500000])
+    setSelectedBody(null)
+    setSelectedDrivetrain(null)
+    setSelectedFeatures([])
     setPage(1)
   }
 
   const totalPages = Math.ceil(total / limit)
 
-  const sortedReviews = [...reviews].sort((a, b) => {
+  const filteredReviews = useMemo(() => {
+    return reviews.filter(r => {
+      if (r.specs?.price != null && (r.specs.price < priceRange[0] || r.specs.price > priceRange[1])) return false
+      if (selectedDrivetrain && r.specs?.drivetrain?.toLowerCase() !== selectedDrivetrain.toLowerCase()) return false
+      return true
+    })
+  }, [reviews, priceRange, selectedDrivetrain])
+
+  const sortedReviews = [...filteredReviews].sort((a, b) => {
     switch (sort) {
       case "price-asc": return (a.specs?.price || 0) - (b.specs?.price || 0)
       case "price-desc": return (b.specs?.price || 0) - (a.specs?.price || 0)
@@ -149,10 +170,13 @@ export default function CarListingsPage() {
                   <section>
                     <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Price Range</h3>
                     <div className="space-y-4">
-                      <input className="w-full accent-primary" max="500000" min="50000" step="10000" type="range" />
+                      <input className="w-full accent-primary" max="500000" min="50000" step="10000" type="range"
+                        value={priceRange[1]}
+                        onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                      />
                       <div className="flex justify-between text-xs font-mono">
-                        <span>$50k</span>
-                        <span className="text-primary font-bold">$250k+</span>
+                        <span>${(priceRange[0] / 1000).toFixed(0)}k</span>
+                        <span className="text-primary font-bold">${(priceRange[1] / 1000).toFixed(0)}k+</span>
                       </div>
                     </div>
                   </section>
@@ -161,8 +185,15 @@ export default function CarListingsPage() {
                   <section>
                     <h3 className="text-xs font-mono mb-3 text-muted-foreground uppercase">Body Style</h3>
                     <div className="grid grid-cols-2 gap-2">
-                      {["Coupe", "Sedan", "SUV", "Convertible"].map((style, i) => (
-                        <button key={style} className={`border border-border py-2 text-xs font-mono hover:bg-muted/30 transition-colors ${i === 0 ? 'border-l-2 border-l-primary' : ''}`}>
+                      {["Coupe", "Sedan", "SUV", "Convertible"].map((style) => (
+                        <button key={style}
+                          className={`border py-2 text-xs font-mono transition-colors ${
+                            selectedBody === style
+                              ? 'border-primary bg-primary/10 text-primary font-bold'
+                              : 'border-border hover:bg-muted/30'
+                          }`}
+                          onClick={() => setSelectedBody(selectedBody === style ? null : style)}
+                        >
                           {style}
                         </button>
                       ))}
@@ -175,7 +206,10 @@ export default function CarListingsPage() {
                     <div className="space-y-2">
                       {["Rear-Wheel Drive", "All-Wheel Drive"].map((dt) => (
                         <label key={dt} className="flex items-center gap-3 cursor-pointer">
-                          <input className="w-4 h-4 border-border text-primary focus:ring-primary" name="drivetrain" type="radio" />
+                          <input className="w-4 h-4 border-border text-primary focus:ring-primary" name="drivetrain" type="radio"
+                            checked={selectedDrivetrain === dt}
+                            onChange={() => setSelectedDrivetrain(selectedDrivetrain === dt ? null : dt)}
+                          />
                           <span className="text-sm">{dt}</span>
                         </label>
                       ))}
@@ -188,7 +222,12 @@ export default function CarListingsPage() {
                     <div className="space-y-2">
                       {["Carbon Ceramic Brakes", "Adaptive Suspension"].map((feature) => (
                         <label key={feature} className="flex items-center gap-3 cursor-pointer">
-                          <input className="w-4 h-4 rounded border-border text-primary focus:ring-primary" type="checkbox" />
+                          <input className="w-4 h-4 rounded border-border text-primary focus:ring-primary" type="checkbox"
+                            checked={selectedFeatures.includes(feature)}
+                            onChange={() => setSelectedFeatures(prev =>
+                              prev.includes(feature) ? prev.filter(f => f !== feature) : [...prev, feature]
+                            )}
+                          />
                           <span className="text-sm">{feature}</span>
                         </label>
                       ))}

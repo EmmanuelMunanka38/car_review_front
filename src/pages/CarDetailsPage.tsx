@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Button } from "@/components/ui/Button"
-import { FiShare2, FiHeart } from "react-icons/fi"
+import { FiShare2, FiHeart, FiX, FiCheck } from "react-icons/fi"
 import { getReviewBySlug, getReviews } from "@/lib/api"
 import type { Review } from "@/lib/types"
 import { FALLBACK_IMAGE, FALLBACK_IMAGE_LG } from "@/lib/constants"
-import { MOCK_REVIEWS } from "@/lib/mockData"
 import { Reveal } from "@/components/ui/Reveal"
 
 export default function CarDetailsPage() {
   const { id: slug } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [review, setReview] = useState<Review | null>(null)
   const [related, setRelated] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null)
+  const [isSaved, setIsSaved] = useState(false)
+  const [testDriveMsg, setTestDriveMsg] = useState(false)
 
   useEffect(() => {
     if (!slug) return
@@ -82,11 +85,17 @@ export default function CarDetailsPage() {
               <Link to="/cars" className="hover:text-primary">CARS</Link> / <span className="text-foreground font-bold uppercase">{review.manufacturer}</span>
             </div>
             <div className="flex gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 border border-border text-xs font-mono hover:bg-muted/30 transition-all">
+              <button
+                className="flex items-center gap-2 px-4 py-2 border border-border text-xs font-mono hover:bg-muted/30 transition-all"
+                onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!") }}
+              >
                 <FiShare2 className="text-sm" /> SHARE
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 border border-border text-xs font-mono hover:bg-muted/30 transition-all">
-                <FiHeart className="text-sm" /> SAVE
+              <button
+                className={`flex items-center gap-2 px-4 py-2 border text-xs font-mono transition-all ${isSaved ? 'border-primary text-primary' : 'border-border hover:bg-muted/30'}`}
+                onClick={() => setIsSaved(!isSaved)}
+              >
+                <FiHeart className={`text-sm ${isSaved ? 'fill-current' : ''}`} /> {isSaved ? 'SAVED' : 'SAVE'}
               </button>
             </div>
           </div>
@@ -130,10 +139,16 @@ export default function CarDetailsPage() {
                   src={review.featured_image || FALLBACK_IMAGE_LG}
                   alt={review.title}
                 />
-                <button className="absolute bottom-6 left-6 flex items-center gap-2 bg-white/70 backdrop-blur-md px-6 py-3 border border-white/20 rounded-full text-xs font-mono hover:bg-white transition-all">
+                <button
+                  className="absolute bottom-6 left-6 flex items-center gap-2 bg-white/70 backdrop-blur-md px-6 py-3 border border-white/20 rounded-full text-xs font-mono hover:bg-white transition-all"
+                  onClick={() => setLightboxUrl(review.featured_image || FALLBACK_IMAGE_LG)}
+                >
                   VIEW 360°
                 </button>
-                <button className="absolute bottom-6 right-6 flex items-center gap-2 bg-white/70 backdrop-blur-md px-4 py-3 border border-white/20 rounded-full text-xs font-mono hover:bg-white transition-all">
+                <button
+                  className="absolute bottom-6 right-6 flex items-center gap-2 bg-white/70 backdrop-blur-md px-4 py-3 border border-white/20 rounded-full text-xs font-mono hover:bg-white transition-all"
+                  onClick={() => setLightboxUrl(review.featured_image || FALLBACK_IMAGE_LG)}
+                >
                   <span className="text-lg">⛶</span>
                 </button>
               </div>
@@ -142,7 +157,7 @@ export default function CarDetailsPage() {
               <div className="grid grid-cols-5 gap-2 mt-4">
                 {gallery.slice(0, 4).map((img, idx) => (
                   <Reveal key={img.id} animation="fade-up" delay={300 + idx * 50}>
-                    <div className="aspect-video bg-muted/50 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+                    <div className="aspect-video bg-muted/50 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setLightboxUrl(img.image_url)}>
                       <img className="w-full h-full object-cover" src={img.image_url} alt={img.alt_text || ""} />
                     </div>
                   </Reveal>
@@ -195,8 +210,8 @@ export default function CarDetailsPage() {
                   </div>
                 )}
               </div>
-              <Button className="w-full py-4 text-sm font-mono mt-8">BOOK A TEST DRIVE</Button>
-              <button className="w-full border border-border text-foreground py-4 text-sm font-mono mt-2 hover:bg-muted/30 transition-colors">LOCAL INVENTORY</button>
+              <Button className="w-full py-4 text-sm font-mono mt-8" onClick={() => setTestDriveMsg(true)}>BOOK A TEST DRIVE</Button>
+              <button className="w-full border border-border text-foreground py-4 text-sm font-mono mt-2 hover:bg-muted/30 transition-colors" onClick={() => navigate(`/cars?manufacturer=${review.manufacturer}`)}>LOCAL INVENTORY</button>
             </div>
           </Reveal>
         </section>
@@ -426,6 +441,27 @@ export default function CarDetailsPage() {
           </section>
         )}
       </main>
+
+      {testDriveMsg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setTestDriveMsg(false)}>
+          <div className="bg-background p-10 text-center max-w-sm mx-4" onClick={e => e.stopPropagation()}>
+            <FiCheck className="text-4xl text-primary mx-auto mb-4" />
+            <h3 className="text-xl font-archivo font-bold mb-2 uppercase">Test Drive Booked</h3>
+            <p className="text-sm text-muted-foreground mb-6">A representative will contact you within 24 hours to confirm your appointment.</p>
+            <Button onClick={() => setTestDriveMsg(false)}>Got it</Button>
+          </div>
+        </div>
+      )}
+
+      {lightboxUrl && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center" onClick={() => setLightboxUrl(null)}>
+          <button className="absolute top-6 right-6 text-white text-2xl z-10" onClick={() => setLightboxUrl(null)}>
+            <FiX />
+          </button>
+          <img className="max-w-[90vw] max-h-[90vh] object-contain" src={lightboxUrl} alt="" onClick={e => e.stopPropagation()} />
+        </div>
+      )}
+
       <Footer />
     </div>
   )
