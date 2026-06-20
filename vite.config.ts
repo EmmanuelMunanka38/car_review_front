@@ -18,15 +18,15 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/carapi/, ''),
       },
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'https://car-reviewdb.onrender.com',
         changeOrigin: true,
       },
       '/api-docs': {
-        target: 'http://localhost:4000',
+        target: 'https://car-reviewdb.onrender.com',
         changeOrigin: true,
       },
       '/sitemap.xml': {
-        target: 'http://localhost:4000',
+        target: 'https://car-reviewdb.onrender.com',
         changeOrigin: true,
       },
     },

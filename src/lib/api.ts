@@ -1,7 +1,7 @@
 import type { Review, ApiResponse, ReviewFilters, Comment, NewsApiResponse, ReviewInput } from "./types"
 import { CHINESE_BRANDS } from "./constants"
 
-const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/+$/, "")
+export const BASE_URL = (import.meta.env.VITE_API_URL ||"https://car-reviewdb.onrender.com").replace(/\/+$/, "")
 const TOKEN_KEY = "fa_auth_token"
 
 function getAuthToken(): string | null {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { Button } from "@/components/ui/Button"
-import { createReview, updateReview, adminGetReviews, deleteReview } from "@/lib/api"
+import { createReview, adminGetReviews, deleteReview } from "@/lib/api"
 import type { Review, ReviewInput } from "@/lib/types"
 import { useAuth } from "@/lib/auth"
 import { 
@@ -28,7 +28,6 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [editingId, setEditingId] = useState<string | null>(null)
   const [contentBody, setContentBody] = useState("")
   const [contentPros, setContentPros] = useState("")
   const [contentCons, setContentCons] = useState("")
